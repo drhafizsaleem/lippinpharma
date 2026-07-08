@@ -15,6 +15,7 @@
             --text-muted: #718096;
             --white: #ffffff;
             --danger: #e53e3e;
+            --whatsapp: #25D366;
         }
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
@@ -53,46 +54,54 @@
         .btn-danger:hover { background: #c53030; }
         .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; }
 
-        .divider { margin: 25px 0; display: flex; align-items: center; text-align: center; color: #a0aec0; font-size: 0.85rem; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
-
         /* Dashboard Application Area */
         .main-content { flex-grow: 1; padding: 20px; overflow-y: auto; height: calc(100vh - 70px); box-sizing: border-box; }
         
-        /* Bottom/Top Navigation */
+        /* Bottom Navigation */
         .nav-bar { background-color: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #edf2f7; }
         .nav-item { color: var(--text-muted); text-align: center; font-size: 0.75rem; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 600; flex: 1; }
         .nav-item.active { color: var(--primary-green); }
         .nav-icon { font-size: 1.3rem; }
         .admin-nav { color: var(--danger) !important; }
 
-        /* Tabs Setup */
         .app-tab { display: none; animation: fadeIn 0.3s; }
         .app-tab.active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* UI Cards for content */
+        /* UI Cards & Lectures */
         .content-card { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; margin-bottom: 10px; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         
+        /* Comments System */
+        .comment-box { display: flex; gap: 10px; margin-top: 15px; }
+        .comment-input { flex: 1; padding: 8px 12px; font-size: 0.85rem; border: 1px solid #e2e8f0; border-radius: 20px; }
+        .btn-comment { background: var(--primary-green); color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+
         /* Admin specific styles */
         .admin-header { background: #fff5f5; border-left: 4px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
         .user-list-item { display: flex; align-items: center; gap: 15px; padding: 10px; border-bottom: 1px solid #edf2f7; }
         .user-list-img { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-color: #eee; }
-        
+        .admin-comment-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green); }
+
+        /* WhatsApp Floating Chat */
+        #wa-widget { position: fixed; bottom: 80px; right: 20px; z-index: 1000; display: none; }
+        .wa-btn { width: 55px; height: 55px; background-color: var(--whatsapp); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); cursor: pointer; transition: 0.3s; }
+        .wa-btn:hover { transform: scale(1.1); }
+        #wa-chat-box { position: absolute; bottom: 65px; right: 0; background: white; width: 280px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); padding: 15px; display: none; flex-direction: column; gap: 10px; border: 1px solid #edf2f7; }
+
         @media (min-width: 769px) {
             #dashboard-screen { display: flex; flex-direction: column-reverse; height: 100vh; }
             .nav-bar { position: sticky; top: 0; bottom: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 1px solid #edf2f7; border-top: none; }
             .main-content { height: auto; padding-bottom: 20px; }
             .nav-item { flex-direction: row; font-size: 0.9rem; justify-content: center; }
+            #wa-widget { bottom: 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="notification-box">
-        <span id="noti-icon">✅</span>
-        <span id="noti-msg">Message</span>
-    </div>
+    <div id="notification-box"><span id="noti-icon">✅</span><span id="noti-msg">Message</span></div>
 
     <div id="splash-screen">
         <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
@@ -107,18 +116,11 @@
             <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
             <h2 style="margin: 0 0 5px 0;">Welcome Back</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Sign in to access study materials</p>
-            
-            <div class="input-group">
-                <input type="email" id="email" placeholder="Email Address">
-            </div>
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Password">
-            </div>
-            
+            <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
+            <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
             <button class="btn btn-primary" id="btn-login">Sign In / Sign Up</button>
             <div class="divider">OR</div>
             <button class="btn btn-google" id="btn-google">🌐 Continue with Google</button>
-            <p style="margin-top: 25px; font-size: 0.8rem; color: var(--text-muted);">Powered by Arfi</p>
         </div>
     </div>
 
@@ -126,20 +128,11 @@
         <div class="card-box">
             <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Required for Admin Records</p>
-            
             <input type="file" id="prof-pic-input" accept="image/*" class="hidden">
             <div class="profile-pic-container" id="prof-pic-preview"><span>📷</span>Photo</div>
-            
-            <div class="input-group">
-                <input type="text" id="prof-name" placeholder="Full Name" required>
-            </div>
-            <div class="input-group">
-                <input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required>
-            </div>
-            <div class="input-group">
-                <input type="text" id="prof-college" placeholder="College Name" required>
-            </div>
-            
+            <div class="input-group"><input type="text" id="prof-name" placeholder="Full Name" required></div>
+            <div class="input-group"><input type="tel" id="prof-phone" placeholder="Mobile / WhatsApp" required></div>
+            <div class="input-group"><input type="text" id="prof-college" placeholder="College Name" required></div>
             <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 10px;">Save Profile</button>
         </div>
     </div>
@@ -151,17 +144,22 @@
             <div id="tab-home" class="app-tab active-tab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
-                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45');"></div>
+                    <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green);"></div>
                 </div>
                 
                 <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Today's Target</h3>
-                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Complete today's pharmacology MCQs based on Lippincott syllabus.</p>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Complete pharmacology MCQs based on Lippincott.</p>
                     <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Start Test ⏱️</button>
                 </div>
+            </div>
 
-                <h3 style="color: var(--text-dark); margin-bottom: 10px; font-size: 1.1rem;">Recent Lectures</h3>
-                <div id="student-lectures-list">
+            <div id="tab-lectures" class="app-tab">
+                <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <input type="text" id="search-lectures" placeholder="🔍 Search topics (e.g. Kinetics, ANS)..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
+                </div>
+                <div id="lectures-container">
                     <p style="font-size:0.9rem; color:var(--text-muted);">Fetching lectures...</p>
                 </div>
             </div>
@@ -169,20 +167,7 @@
             <div id="tab-tests" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 20px;">MCQ Testing System</h2>
                 <div class="content-card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold; color:var(--danger);">
-                        <span>Time Left: <span id="timer">30:00</span></span>
-                        <span>Score: <span id="live-score">0</span></span>
-                    </div>
-                    <div id="mcq-container">
-                        <p style="font-size:0.9rem; color:var(--text-muted);">MCQs will load here from database...</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-downloads" class="app-tab">
-                <h2 style="color: var(--dark-green); margin-bottom: 20px;">Helping Material</h2>
-                <div class="content-card">
-                    <p style="font-size:0.9rem; color:var(--text-muted);">PDF files and lecture notes will appear here.</p>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">MCQs will load here from database...</p>
                 </div>
             </div>
 
@@ -192,7 +177,6 @@
                     <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px; border:3px solid var(--primary-green);"></div>
                     <h3 id="profile-page-name" style="margin:0 0 5px 0;">Student Name</h3>
                     <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
-                    
                     <button class="btn btn-danger" id="btn-logout" style="margin-top: 20px;">🚪 Logout Securely</button>
                 </div>
             </div>
@@ -200,37 +184,39 @@
             <div id="tab-admin" class="app-tab">
                 <div class="admin-header">
                     <h2 style="margin:0; color:var(--danger);">Admin Control Panel</h2>
-                    <p style="margin:5px 0 0 0; font-size:0.85rem;">Welcome Arfi. You have full access.</p>
                 </div>
 
                 <div class="content-card">
-                    <h3 style="margin-top:0;">Add New Lecture / Material</h3>
-                    <div class="input-group"><input type="text" id="admin-lec-title" placeholder="Lecture Title"></div>
-                    <div class="input-group"><input type="url" id="admin-lec-link" placeholder="Video / PDF Link"></div>
+                    <h3 style="margin-top:0;">Add Video Lecture</h3>
+                    <div class="input-group"><input type="text" id="admin-lec-title" placeholder="Lecture Title (Keywords for search)"></div>
+                    <div class="input-group"><input type="url" id="admin-lec-link" placeholder="YouTube Video Link"></div>
                     <button class="btn btn-primary" id="btn-add-lecture">Add to App</button>
                 </div>
 
                 <div class="content-card">
-                    <h3 style="margin-top:0;">Registered Students</h3>
-                    <div id="admin-users-list">
-                        <p style="font-size:0.85rem; color:var(--text-muted);">Loading users...</p>
+                    <h3 style="margin-top:0;">Student Comments / Queries</h3>
+                    <div id="admin-comments-list">
+                        <p style="font-size:0.85rem; color:var(--text-muted);">Loading comments...</p>
                     </div>
                 </div>
 
+                <div class="content-card">
+                    <h3 style="margin-top:0;">Registered Students</h3>
+                    <div id="admin-users-list"></div>
+                </div>
                 <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 20px;">🚪 Logout Admin</button>
             </div>
-
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('tab-home', this)">
                 <span class="nav-icon">🏠</span><span>Home</span>
             </div>
+            <div class="nav-item" onclick="switchTab('tab-lectures', this)">
+                <span class="nav-icon">📺</span><span>Lectures</span>
+            </div>
             <div class="nav-item" onclick="switchTab('tab-tests', this)">
                 <span class="nav-icon">📝</span><span>Tests</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('tab-downloads', this)">
-                <span class="nav-icon">📥</span><span>Material</span>
             </div>
             <div class="nav-item" onclick="switchTab('tab-profile', this)">
                 <span class="nav-icon">👤</span><span>Profile</span>
@@ -239,6 +225,15 @@
                 <span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span>
             </div>
         </div>
+    </div>
+
+    <div id="wa-widget">
+        <div id="wa-chat-box">
+            <h4 style="margin:0; color:var(--dark-green);">Message Admin</h4>
+            <textarea id="wa-msg-text" rows="3" placeholder="Type your query here..." style="font-size: 0.85rem; resize: none;"></textarea>
+            <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Send to WhatsApp ✈️</button>
+        </div>
+        <div class="wa-btn" id="wa-toggle-btn">💬</div>
     </div>
 
     <script type="module">
@@ -263,9 +258,11 @@
         const provider = new GoogleAuthProvider();
 
         let currentUser = null;
+        let currentUserData = null;
         let selectedFile = null;
+        let allLectures = []; // To store lectures for fast searching
 
-        // UI Helpers
+        // Utilities
         window.showToast = function(message, type = 'success') {
             const box = document.getElementById('notification-box');
             document.getElementById('noti-msg').innerText = message;
@@ -283,34 +280,223 @@
             }
         }
 
-        // === SESSION TIMEOUT LOGIC (30 Mins) ===
-        const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 mins
-        
-        function updateActivityTime() {
-            localStorage.setItem('lastActiveTime', Date.now());
+        // WhatsApp Live Chat Logic
+        document.getElementById('wa-toggle-btn').addEventListener('click', () => {
+            const chatBox = document.getElementById('wa-chat-box');
+            chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.getElementById('btn-send-wa').addEventListener('click', () => {
+            const msg = document.getElementById('wa-msg-text').value;
+            if(!msg) return showToast("Type a message first!", "error");
+            const studentName = currentUserData ? currentUserData.name : "Student";
+            const waText = `Lippinpharma app ki taraf sy ${studentName} student ka message aya hai:\n\n"${msg}"`;
+            const waUrl = `https://wa.me/923246767582?text=${encodeURIComponent(waText)}`;
+            window.open(waUrl, '_blank');
+            document.getElementById('wa-msg-text').value = '';
+            document.getElementById('wa-chat-box').style.display = 'none';
+        });
+
+        // Convert any YouTube link to clean embed link
+        function getYouTubeEmbedUrl(url) {
+            let videoId = '';
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            if (match && match[2].length === 11) videoId = match[2];
+            // modestbranding=1 removes YT logo, rel=0 stops random suggested videos
+            return videoId ? `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&controls=1` : url;
         }
 
-        // Reset timer on any click or keypress
+        // Session Timeout
+        const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+        function updateActivityTime() { localStorage.setItem('lastActiveTime', Date.now()); }
         document.addEventListener('click', updateActivityTime);
         document.addEventListener('keypress', updateActivityTime);
 
         function checkSessionTimeout() {
             const lastActive = localStorage.getItem('lastActiveTime');
             if (lastActive && (Date.now() - parseInt(lastActive) > SESSION_TIMEOUT_MS)) {
-                // Time is up, logout user
                 if (auth.currentUser) {
                     signOut(auth).then(() => {
                         localStorage.removeItem('lastActiveTime');
-                        alert("Session Expired due to inactivity. Please login again.");
+                        alert("Session Expired. Please login again.");
                         window.location.reload();
                     });
                 }
+            } else updateActivityTime();
+        }
+
+        // Auth Observer
+        setTimeout(() => {
+            onAuthStateChanged(auth, async (user) => {
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
+                if (user) {
+                    checkSessionTimeout();
+                    currentUser = user;
+                    checkUserProfile(user);
+                } else {
+                    document.getElementById('login-screen').classList.remove('hidden');
+                }
+            });
+        }, 2000);
+
+        async function checkUserProfile(user) {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if(user.email === "uarajpoot31@gmail.com") {
+                document.getElementById('admin-nav-item').classList.remove('hidden');
+                loadAdminData(); 
+                fetchAdminComments();
+            }
+
+            if (docSnap.exists()) {
+                currentUserData = docSnap.data();
+                document.getElementById('welcome-title').innerText = `Hi, ${currentUserData.name}`;
+                document.getElementById('profile-page-name').innerText = currentUserData.name;
+                document.getElementById('profile-page-email').innerText = user.email;
+                const picUrl = currentUserData.profilePic || "https://via.placeholder.com/150";
+                document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${picUrl})`;
+                document.getElementById('profile-page-pic').style.backgroundImage = `url(${picUrl})`;
+
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('wa-widget').style.display = 'block'; // Show Chat
+                
+                fetchLectures();
             } else {
-                updateActivityTime();
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('profile-screen').classList.remove('hidden');
             }
         }
 
-        // Profile Pic Selector
+        // Student Lectures & Smart Search Logic
+        async function fetchLectures() {
+            const lecSnap = await getDocs(collection(db, "lectures"));
+            allLectures = [];
+            lecSnap.forEach(doc => {
+                allLectures.push({ id: doc.id, ...doc.data() });
+            });
+            renderLectures(allLectures);
+        }
+
+        function renderLectures(lecturesArr) {
+            let html = '';
+            lecturesArr.forEach(l => {
+                const cleanUrl = getYouTubeEmbedUrl(l.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container">
+                        <iframe src="${cleanUrl}" allowfullscreen></iframe>
+                    </div>
+                    <h3 style="margin:5px 0; font-size:1.1rem;">${l.title}</h3>
+                    
+                    <div class="comment-box">
+                        <input type="text" id="cmt-${l.id}" class="comment-input" placeholder="Ask a question or comment...">
+                        <button class="btn-comment" onclick="postComment('${l.id}', '${l.title}')">Post</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('lectures-container').innerHTML = html || "<p>No lectures uploaded yet.</p>";
+        }
+
+        // Smart Search Event
+        document.getElementById('search-lectures').addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = allLectures.filter(l => l.title.toLowerCase().includes(keyword));
+            renderLectures(filtered);
+        });
+
+        // Post Comment to DB
+        window.postComment = async function(lectureId, lectureTitle) {
+            const inputField = document.getElementById(`cmt-${lectureId}`);
+            const text = inputField.value;
+            if(!text) return showToast("Write a comment first", "error");
+            
+            showToast("Posting comment...", "success");
+            await addDoc(collection(db, "comments"), {
+                lectureId: lectureId,
+                lectureTitle: lectureTitle,
+                studentName: currentUserData.name,
+                studentEmail: currentUser.email,
+                text: text,
+                date: new Date().toISOString()
+            });
+            inputField.value = '';
+            showToast("Comment sent to Admin!", "success");
+        }
+
+        // --- ADMIN FUNCTIONS ---
+        // 1. Fetch Comments for Admin
+        async function fetchAdminComments() {
+            const snap = await getDocs(collection(db, "comments"));
+            let html = '';
+            snap.forEach(doc => {
+                const c = doc.data();
+                const d = new Date(c.date).toLocaleDateString();
+                html += `
+                <div class="admin-comment-item">
+                    <div style="font-size:0.75rem; color:var(--primary-green); font-weight:bold;">${c.lectureTitle}</div>
+                    <div style="font-weight:bold; margin: 4px 0;">${c.studentName} <span style="font-weight:normal; font-size:0.8rem; color:gray;">- ${d}</span></div>
+                    <div style="font-size:0.9rem;">"${c.text}"</div>
+                </div>`;
+            });
+            document.getElementById('admin-comments-list').innerHTML = html || "<p>No queries yet.</p>";
+        }
+
+        // 2. Add Lecture
+        document.getElementById('btn-add-lecture').addEventListener('click', async () => {
+            const title = document.getElementById('admin-lec-title').value;
+            const link = document.getElementById('admin-lec-link').value;
+            if(!title || !link) return showToast("Fill all fields", "error");
+            
+            showToast("Adding material...", "success");
+            await addDoc(collection(db, "lectures"), { title, link, date: new Date().toISOString() });
+            showToast("Added successfully!", "success");
+            document.getElementById('admin-lec-title').value = '';
+            document.getElementById('admin-lec-link').value = '';
+            fetchLectures(); // Refresh live
+        });
+
+        // 3. Fetch Users
+        async function loadAdminData() {
+            const usersSnap = await getDocs(collection(db, "users"));
+            let html = '';
+            usersSnap.forEach(doc => {
+                const u = doc.data();
+                html += `
+                <div class="user-list-item">
+                    <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
+                    <div>
+                        <div style="font-weight:bold; font-size:0.95rem;">${u.name}</div>
+                        <div style="font-size:0.75rem; color:gray;">${u.college} | ${u.phone}</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('admin-users-list').innerHTML = html || "<p>No users yet.</p>";
+        }
+
+        // Auth Buttons Config
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const e = document.getElementById('email').value, p = document.getElementById('password').value;
+            if(!e || !p) return showToast("Enter details", "error");
+            try { await signInWithEmailAndPassword(auth, e, p); } 
+            catch (err) {
+                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                    try { await createUserWithEmailAndPassword(auth, e, p); showToast("Account Created!"); } 
+                    catch (er) { showToast(er.message, "error"); }
+                } else { showToast(err.message, "error"); }
+            }
+        });
+
+        document.getElementById('btn-google').addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (err) { showToast(err.message, "error"); }
+        });
+
+        // Profile Setup Config
         const fileInput = document.getElementById('prof-pic-input');
         document.getElementById('prof-pic-preview').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
@@ -326,73 +512,6 @@
             }
         });
 
-        // Auth Observer
-        setTimeout(() => {
-            onAuthStateChanged(auth, async (user) => {
-                document.getElementById('splash-screen').style.opacity = '0';
-                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; }, 600);
-
-                if (user) {
-                    checkSessionTimeout(); // Check if they are returning after 30 mins
-                    currentUser = user;
-                    checkUserProfile(user);
-                } else {
-                    document.getElementById('login-screen').classList.remove('hidden');
-                }
-            });
-        }, 2000);
-
-        async function checkUserProfile(user) {
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-
-            // Admin Logic
-            if(user.email === "uarajpoot31@gmail.com") {
-                document.getElementById('admin-nav-item').classList.remove('hidden');
-                loadAdminData(); // Fetch users for admin
-            }
-
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
-                document.getElementById('profile-page-name').innerText = data.name;
-                document.getElementById('profile-page-email').innerText = user.email;
-                
-                const picUrl = data.profilePic || "https://via.placeholder.com/150";
-                document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${picUrl})`;
-                document.getElementById('profile-page-pic').style.backgroundImage = `url(${picUrl})`;
-
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('profile-screen').classList.add('hidden');
-                document.getElementById('dashboard-screen').classList.remove('hidden');
-                
-                loadLectures(); // Fetch content for student
-            } else {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('profile-screen').classList.remove('hidden');
-            }
-        }
-
-        // Login System
-        document.getElementById('btn-login').addEventListener('click', async () => {
-            const e = document.getElementById('email').value, p = document.getElementById('password').value;
-            if(!e || !p) return showToast("Enter details", "error");
-            showToast("Authenticating...");
-            try { await signInWithEmailAndPassword(auth, e, p); } 
-            catch (err) {
-                if(err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-                    try { await createUserWithEmailAndPassword(auth, e, p); showToast("Account Created!"); } 
-                    catch (er) { showToast(er.message, "error"); }
-                } else { showToast(err.message, "error"); }
-            }
-        });
-
-        document.getElementById('btn-google').addEventListener('click', async () => {
-            try { await signInWithPopup(auth, provider); } 
-            catch (err) { showToast(err.message, "error"); }
-        });
-
-        // Save Profile
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
             const name = document.getElementById('prof-name').value;
             const phone = document.getElementById('prof-phone').value;
@@ -413,64 +532,12 @@
             checkUserProfile(currentUser);
         });
 
-        // SECURE LOGOUT SYSTEM
         const logoutHandler = () => {
-            signOut(auth).then(() => {
-                localStorage.removeItem('lastActiveTime');
-                window.location.reload();
-            });
+            signOut(auth).then(() => { localStorage.removeItem('lastActiveTime'); window.location.reload(); });
         };
         document.getElementById('btn-logout').addEventListener('click', logoutHandler);
         document.getElementById('btn-admin-logout').addEventListener('click', logoutHandler);
 
-        // --- ADMIN FUNCTIONS ---
-        // 1. Add material
-        document.getElementById('btn-add-lecture').addEventListener('click', async () => {
-            const title = document.getElementById('admin-lec-title').value;
-            const link = document.getElementById('admin-lec-link').value;
-            if(!title || !link) return showToast("Fill all fields", "error");
-            
-            showToast("Adding material...", "success");
-            await addDoc(collection(db, "lectures"), { title, link, date: new Date().toISOString() });
-            showToast("Added successfully!", "success");
-            document.getElementById('admin-lec-title').value = '';
-            document.getElementById('admin-lec-link').value = '';
-            loadLectures();
-        });
-
-        // 2. Fetch Users (Admin Only)
-        async function loadAdminData() {
-            const usersSnap = await getDocs(collection(db, "users"));
-            let html = '';
-            usersSnap.forEach(doc => {
-                const u = doc.data();
-                html += `
-                <div class="user-list-item">
-                    <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
-                    <div>
-                        <div style="font-weight:bold; font-size:0.95rem;">${u.name}</div>
-                        <div style="font-size:0.75rem; color:gray;">${u.college} | ${u.phone}</div>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('admin-users-list').innerHTML = html || "<p>No users yet.</p>";
-        }
-
-        // --- STUDENT FUNCTIONS ---
-        // Load Lectures to Student Dashboard
-        async function loadLectures() {
-            const lecSnap = await getDocs(collection(db, "lectures"));
-            let html = '';
-            lecSnap.forEach(doc => {
-                const l = doc.data();
-                html += `
-                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-weight:600;">▶️ ${l.title}</div>
-                    <a href="${l.link}" target="_blank" style="color:var(--primary-green); font-size:0.8rem; text-decoration:none; font-weight:bold;">Watch</a>
-                </div>`;
-            });
-            document.getElementById('student-lectures-list').innerHTML = html || "<p>No lectures uploaded yet.</p>";
-        }
     </script>
 </body>
 </html>
