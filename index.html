@@ -16,6 +16,7 @@
             --white: #ffffff;
             --danger: #e53e3e;
             --whatsapp: #25D366;
+            --warning: #ed8936;
         }
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
@@ -106,8 +107,10 @@
 </head>
 <body>
 
+    <!-- Notification Toast Message Framework -->
     <div id="notification-box"><span id="noti-icon">✅</span><span id="noti-msg">System Action</span></div>
 
+    <!-- 1. Splash Screen -->
     <div id="splash-screen">
         <img src="logo.webp" alt="Logo" class="app-logo-splash" onerror="this.src='https://via.placeholder.com/120/069C54/ffffff?text=LP'">
         <h1 class="splash-title">LippinPharma</h1>
@@ -116,6 +119,7 @@
         <p style="position: absolute; bottom: 30px; font-size: 0.85rem; opacity: 0.8; font-weight: 500;">Powered by Arfi</p>
     </div>
 
+    <!-- 2. Authentication Screen -->
     <div id="login-screen" class="center-wrapper hidden">
         <div class="card-box">
             <img src="logo.webp" alt="Logo" class="app-logo-form" onerror="this.src='https://via.placeholder.com/70/069C54/ffffff?text=LP'">
@@ -129,6 +133,7 @@
         </div>
     </div>
 
+    <!-- 3. Profile Setup Form (Fixed Structure) -->
     <div id="profile-screen" class="center-wrapper hidden">
         <div class="card-box">
             <h2 style="margin: 0 0 5px 0;">Setup Profile</h2>
@@ -147,10 +152,12 @@
         </div>
     </div>
 
+    <!-- 4. Core Application Space -->
     <div id="dashboard-screen" class="hidden">
         
         <div class="main-content">
             
+            <!-- Home Screen Tab Layout -->
             <div id="tab-home" class="app-tab active-tab">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 style="margin:0; color: var(--dark-green);" id="welcome-title">Dashboard</h2>
@@ -166,6 +173,7 @@
                 <div id="home-recent-activity"><p style="font-size:0.85rem; color:var(--text-muted);">Syncing platform activity feed...</p></div>
             </div>
 
+            <!-- Video Lectures Tab Section -->
             <div id="tab-lectures" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
                 <div class="input-group" style="margin-bottom: 20px;">
@@ -174,15 +182,18 @@
                 <div id="lectures-container"></div>
             </div>
 
+            <!-- Learning Materials Download Tab Section -->
             <div id="tab-material" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 15px;">Study Material</h2>
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Download textbooks summaries, PDFs, and presentation slides uploaded by admin.</p>
                 <div id="materials-container"><p style="font-size:0.9rem; color:var(--text-muted);">Loading downloadable items...</p></div>
             </div>
 
+            <!-- Testing & AI Custom Generation Tab System -->
             <div id="tab-tests" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 10px;">Testing Framework</h2>
                 
+                <!-- AI Engine Interface Panel -->
                 <div class="content-card" style="background: var(--light-green); border: 1px dashed var(--primary-green);">
                     <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">⚡ AI Custom Test Generator (Gemini Engine)</h3>
                     <p style="font-size:0.8rem; margin: -5px 0 15px 0; color: var(--text-dark);">Enter your Lippincott topic name and number of questions to generate an instant mock quiz.</p>
@@ -199,22 +210,53 @@
                 </div>
             </div>
 
+            <!-- Profile View & Edit Tab Structure -->
             <div id="tab-profile" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 20px;">User Profile</h2>
                 <div class="content-card" style="text-align: center;">
                     <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px auto; border:3px solid var(--primary-green); background-image:url('https://via.placeholder.com/100')"></div>
                     <h3 id="profile-page-name" style="margin:0 0 5px 0;">Student Record</h3>
                     <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
-                    <button class="btn btn-danger" id="btn-logout" style="margin-top: 20px; max-width:200px; margin-left:auto; margin-right:auto;">🚪 Logout Securely</button>
+                    
+                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 200px; margin: 0 auto 15px auto;">✏️ Edit Profile</button>
+                    
+                    <!-- Editable Form Area (Hidden by Default) -->
+                    <div id="edit-profile-form" class="hidden" style="text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
+                        <h4 style="margin-top: 0; color: var(--dark-green);">Update Information</h4>
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="edit-prof-name">
+                        </div>
+                        <div class="input-group">
+                            <label>Mobile / WhatsApp</label>
+                            <input type="tel" id="edit-prof-phone">
+                        </div>
+                        <div class="input-group">
+                            <label>College Name</label>
+                            <input type="text" id="edit-prof-college">
+                        </div>
+                        <button class="btn btn-primary" id="btn-update-profile">Save Changes</button>
+                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top: 10px;">Cancel</button>
+                    </div>
+
+                    <button class="btn btn-danger" id="btn-logout" style="margin-top: 10px; max-width:200px; margin-left:auto; margin-right:auto;">🚪 Logout Securely</button>
                 </div>
             </div>
 
+            <!-- HIDDEN MASTER PORTAL ADMIN TAB -->
             <div id="tab-admin" class="app-tab">
                 <div class="admin-header">
                     <h2 style="margin:0; color:var(--danger);">Admin Control Workspace</h2>
                     <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled. Hello Arfi.</p>
                 </div>
 
+                <!-- NEW: Admin Feed Window - System Notifications (Profile Updates) -->
+                <div class="content-card">
+                    <h3 style="margin-top:0; font-size:1rem;">🔔 System & Profile Notifications</h3>
+                    <div id="admin-notifications-list"><p style="font-size:0.85rem; color:var(--text-muted);">No new notifications.</p></div>
+                </div>
+
+                <!-- Admin Function Set 1: Upload Video -->
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Add Video Lecture Node</h3>
                     <div class="input-group"><input type="text" id="admin-lec-title" placeholder="Lecture Title / Index Key"></div>
@@ -222,6 +264,7 @@
                     <button class="btn btn-primary" id="btn-add-lecture">Publish Video Node</button>
                 </div>
 
+                <!-- Admin Function Set 2: Upload Files -->
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Upload PDF / PPT Materials</h3>
                     <div class="input-group"><input type="text" id="admin-mat-title" placeholder="Material Item Title"></div>
@@ -229,11 +272,13 @@
                     <button class="btn btn-primary" id="btn-add-material">Upload Reference File</button>
                 </div>
 
+                <!-- Admin Feed Window 3: Student Queries -->
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Student Comments Feed</h3>
                     <div id="admin-comments-list"><p style="font-size:0.85rem; color:var(--text-muted);">No feed records available.</p></div>
                 </div>
 
+                <!-- Admin Feed Window 4: Students Log Directory -->
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Users Log Directory</h3>
                     <div id="admin-users-list"></div>
@@ -242,6 +287,7 @@
             </div>
         </div>
 
+        <!-- Adaptive Layout Navigation System Bar -->
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('tab-home', this)">
                 <span class="nav-icon">🏠</span><span>Home</span>
@@ -264,6 +310,7 @@
         </div>
     </div>
 
+    <!-- Floating Native WhatsApp SVG Integration Engine -->
     <div id="wa-widget">
         <div id="wa-chat-box">
             <h4 style="margin:0 0 5px 0; color:var(--dark-green);">Direct Line Helpdesk</h4>
@@ -275,10 +322,11 @@
         </div>
     </div>
 
+    <!-- Complete Firebase Core Modules + Automated AI Script Architecture -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
         // Integrated Firebase Instance Keys Configuration
@@ -291,8 +339,7 @@
             appId: "1:828017458601:web:ae687eea3978a7002198b8"
         };
 
-        // SECURE GEMINI AI CORE KEY PLACEHOLDER
-        const GEMINI_API_KEY = "AIzaSy" + "YourActualGeminiKey" || ""; // Paste your gemini key string structure here
+        const GEMINI_API_KEY = "AIzaSy" + "YourActualGeminiKey" || ""; // Paste your gemini key here
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -323,7 +370,7 @@
             }
         }
 
-        // Floating Dynamic WhatsApp Engine Event Configurations
+        // WhatsApp Event Configurations
         document.getElementById('wa-toggle-btn').addEventListener('click', () => {
             const box = document.getElementById('wa-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
@@ -332,17 +379,13 @@
         document.getElementById('btn-send-wa').addEventListener('click', () => {
             const customQuery = document.getElementById('wa-msg-text').value;
             const sName = currentUserData ? currentUserData.name : "Student";
-            
-            // Text template rule update requested by client
             const textString = `Hi This is ${sName} here from LippinPharma. \nQuery details: ${customQuery}`;
             const targetURI = `https://wa.me/923156765582?text=${encodeURIComponent(textString)}`;
-            
             window.open(targetURI, '_blank');
             document.getElementById('wa-msg-text').value = '';
             document.getElementById('wa-chat-box').style.display = 'none';
         });
 
-        // Fixed YouTube Parser Engine Regex Code for Embed Media Layout
         function getYouTubeEmbedUrl(urlStr) {
             if(!urlStr) return "";
             let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -353,7 +396,6 @@
             return urlStr;
         }
 
-        // Profile Image Input Trigger Sync Block
         const fileInput = document.getElementById('prof-pic-input');
         const picContainerFrame = document.getElementById('prof-pic-preview');
 
@@ -375,7 +417,6 @@
             }
         });
 
-        // Session Expiration Handler Logic
         const SESSION_TIMEOUT = 30 * 60 * 1000;
         function pingSession() { localStorage.setItem('sessionTick', Date.now()); }
         document.addEventListener('click', pingSession);
@@ -394,7 +435,6 @@
             } else pingSession();
         }
 
-        // Authentication Monitor Core
         setTimeout(() => {
             onAuthStateChanged(auth, async (user) => {
                 document.getElementById('splash-screen').style.opacity = '0';
@@ -417,12 +457,7 @@
             }
             if(snap.exists()) {
                 currentUserData = snap.data();
-                document.getElementById('welcome-title').innerText = `Hi, ${currentUserData.name}`;
-                document.getElementById('profile-page-name').innerText = currentUserData.name;
-                document.getElementById('profile-page-email').innerText = user.email;
-                const srcPic = currentUserData.profilePic || "https://via.placeholder.com/150";
-                document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${srcPic})`;
-                document.getElementById('profile-page-pic').style.backgroundImage = `url(${srcPic})`;
+                updateProfileUI(currentUserData, user.email);
 
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('profile-screen').classList.add('hidden');
@@ -431,14 +466,87 @@
                 
                 fetchLectures();
                 fetchMaterials();
-                runDailyAIQuizSync(); // Trigger daily quiz check
+                runDailyAIQuizSync(); 
             } else {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('profile-screen').classList.remove('hidden');
             }
         }
 
-        // Core Student Features: Fetch Lectures
+        function updateProfileUI(data, email) {
+            document.getElementById('welcome-title').innerText = `Hi, ${data.name}`;
+            document.getElementById('profile-page-name').innerText = data.name;
+            document.getElementById('profile-page-email').innerText = email;
+            const srcPic = data.profilePic || "https://via.placeholder.com/150";
+            document.getElementById('dashboard-user-pic').style.backgroundImage = `url(${srcPic})`;
+            document.getElementById('profile-page-pic').style.backgroundImage = `url(${srcPic})`;
+        }
+
+        // ==========================================
+        // NEW FEATURE: STUDENT EDIT PROFILE SYSTEM
+        // ==========================================
+        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.remove('hidden');
+            document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
+            document.getElementById('edit-prof-name').value = currentUserData.name || '';
+            document.getElementById('edit-prof-phone').value = currentUserData.phone || '';
+            document.getElementById('edit-prof-college').value = currentUserData.college || '';
+        });
+
+        document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+            document.getElementById('edit-profile-form').classList.add('hidden');
+            document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-update-profile').addEventListener('click', async () => {
+            const newName = document.getElementById('edit-prof-name').value;
+            const newPhone = document.getElementById('edit-prof-phone').value;
+            const newCollege = document.getElementById('edit-prof-college').value;
+
+            if(!newName || !newPhone || !newCollege) return showToast("All fields are required.", "error");
+
+            let changes = [];
+            if(newName !== currentUserData.name) changes.push(`Name: ${currentUserData.name} ➡️ ${newName}`);
+            if(newPhone !== currentUserData.phone) changes.push(`Phone: ${currentUserData.phone} ➡️ ${newPhone}`);
+            if(newCollege !== currentUserData.college) changes.push(`College: ${currentUserData.college} ➡️ ${newCollege}`);
+
+            if(changes.length === 0) return showToast("No changes detected.", "error");
+
+            showToast("Updating profile and notifying admin...", "success");
+
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    name: newName, phone: newPhone, college: newCollege
+                });
+
+                // Generate system log notification for Admin
+                await addDoc(collection(db, "notifications"), {
+                    studentEmail: currentUser.email,
+                    studentName: currentUserData.name,
+                    message: changes.join(" | "),
+                    date: new Date().toISOString()
+                });
+
+                // Update local app state seamlessly
+                currentUserData.name = newName;
+                currentUserData.phone = newPhone;
+                currentUserData.college = newCollege;
+                
+                updateProfileUI(currentUserData, currentUser.email);
+                
+                document.getElementById('edit-profile-form').classList.add('hidden');
+                document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
+                showToast("Profile successfully updated!", "success");
+
+                // Live update admin feed if admin is testing
+                if(currentUser.email === "uarajpoot31@gmail.com") fetchAdminNotifications();
+
+            } catch (error) {
+                showToast(`Update failed: ${error.message}`, "error");
+            }
+        });
+
+        // Data Fetching logic
         async function fetchLectures() {
             const snap = await getDocs(collection(db, "lectures"));
             allLectures = [];
@@ -460,7 +568,6 @@
             document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
         }
 
-        // Live Client Filter Engine Code
         document.getElementById('search-lectures').addEventListener('input', (e) => {
             let key = e.target.value.toLowerCase();
             let matches = allLectures.filter(l => l.title.toLowerCase().includes(key));
@@ -476,7 +583,6 @@
             document.getElementById('lectures-container').innerHTML = html;
         });
 
-        // Core Student Features: Fetch Downloadable Materials
         async function fetchMaterials() {
             const snap = await getDocs(collection(db, "materials"));
             let html = '';
@@ -494,7 +600,6 @@
             document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No learning file packages cataloged.</p>";
         }
 
-        // Comment Pipeline Execution Block
         window.postCommentNode = async function(lecId, lecTitle) {
             let val = document.getElementById(`cmt-${lecId}`).value;
             if(!val) return;
@@ -506,16 +611,9 @@
             document.getElementById(`cmt-${lecId}`).value = '';
             showToast("Comment successfully dispatched to Admin workspace.");
         }
-
-        // ==========================================
-        // ADVANCED INTEGRATION: GEMINI AI SERVICE IMPLEMENTATION
-        // ==========================================
         
         async function queryGeminiModel(promptMessage) {
-            if(!GEMINI_API_KEY) {
-                console.error("Missing valid API key credentials context.");
-                return "ERROR";
-            }
+            if(!GEMINI_API_KEY) return "ERROR";
             try {
                 let endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
                 let response = await fetch(endpoint, {
@@ -525,12 +623,9 @@
                 });
                 let data = await response.json();
                 return data.candidates[0].content.parts[0].text;
-            } catch (e) {
-                return "ERROR";
-            }
+            } catch (e) { return "ERROR"; }
         }
 
-        // Automated System Validation Routine: Daily 10 Quiz
         async function runDailyAIQuizSync() {
             let todayKey = new Date().toISOString().split('T')[0];
             let checkDoc = await getDoc(doc(db, "daily_quizzes", todayKey));
@@ -538,20 +633,16 @@
             if(checkDoc.exists()) {
                 renderEvaluationBlock(checkDoc.data().questions);
             } else {
-                // Generate Daily 10 Questions contextually mapping Lippincott Pharmacology
-                let requestInstruction = `Generate exactly 10 medical multiple choice questions for 3rd semester nursing students based strictly on Lippincott Illustrated Reviews: Pharmacology. Output must be a valid JSON array of objects. Do not wrap response in markdown code blocks or backticks. Format pattern: [{"question": "Text query string?", "options": ["A", "B", "C", "D"], "correctIndex": 0}].`;
+                let requestInstruction = `Generate exactly 10 medical multiple choice questions for 3rd semester nursing students based strictly on Lippincott Illustrated Reviews: Pharmacology. Output must be a valid JSON array of objects. Format pattern: [{"question": "Text query string?", "options": ["A", "B", "C", "D"], "correctIndex": 0}].`;
                 let rawAIString = await queryGeminiModel(requestInstruction);
                 try {
                     let parsedArr = JSON.parse(rawAIString.replace(/```json/g, "").replace(/```/g, "").trim());
                     await setDoc(doc(db, "daily_quizzes", todayKey), { questions: parsedArr, generatedAt: todayKey });
                     renderEvaluationBlock(parsedArr);
-                } catch(err) {
-                    console.log("Fallback placeholder fallback initialization logic executed.");
-                }
+                } catch(err) { console.log("Fallback logic applied."); }
             }
         }
 
-        // AI Dynamic Custom Generator Event Integration Node (With Validation Shield Architecture)
         document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
             let targetTopic = document.getElementById('ai-topic').value;
             let targetCount = document.getElementById('ai-count').value || 5;
@@ -559,8 +650,7 @@
             if(!targetTopic) return showToast("Target reference index blank.", "error");
             showToast("Analyzing topic request matrix...");
 
-            // Security evaluation instruction rule passed inside model system framework sequence
-            let strictRulePrompt = `You are an absolute validator engine for Lippincott Illustrated Reviews: Pharmacology. The user wants ${targetCount} multiple choice questions about "${targetTopic}". CRITICAL SECURITY CHECK: If "${targetTopic}" is completely unrelated to pharmacology, medicine, or drugs textbook mapping data, you must reply exactly with the single word ERROR. If it is valid pharmacology data, generate questions as a clean JSON array structure without markdown formatting wrapper: [{"question": "Query", "options": ["1","2","3","4"], "correctIndex": 0}].`;
+            let strictRulePrompt = `You are an absolute validator engine for Lippincott Illustrated Reviews: Pharmacology. The user wants ${targetCount} multiple choice questions about "${targetTopic}". CRITICAL SECURITY CHECK: If "${targetTopic}" is completely unrelated to pharmacology, medicine, or drugs textbook mapping data, you must reply exactly with the single word ERROR. If valid pharmacology data, generate questions as a clean JSON array structure: [{"question": "Query", "options": ["1","2","3","4"], "correctIndex": 0}].`;
             
             let resultPayload = await queryGeminiModel(strictRulePrompt);
             let cleanedResult = resultPayload.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -575,9 +665,7 @@
                 document.getElementById('quiz-title-heading').innerText = `AI Custom Quiz: ${targetTopic}`;
                 renderEvaluationBlock(quizData);
                 showToast("AI Test generated successfully.");
-            } catch (jsonErr) {
-                showToast("Unexpected error", "error");
-            }
+            } catch (jsonErr) { showToast("Unexpected error", "error"); }
         });
 
         function renderEvaluationBlock(questionsArray) {
@@ -598,7 +686,7 @@
         window.evaluateSelectionNode = function(el, selectedIndex, targetCorrectIndex) {
             let parent = el.parentNode;
             let options = parent.querySelectorAll('.quiz-option');
-            options.forEach(o => o.style.pointerEvents = 'none'); // Lock element choices
+            options.forEach(o => o.style.pointerEvents = 'none'); 
             if(selectedIndex === targetCorrectIndex) {
                 el.style.background = '#d1fae5';
                 el.style.borderColor = 'var(--primary-green)';
@@ -614,7 +702,6 @@
         // ADMINISTRATIVE ACTIONS HANDLERS
         // ==========================================
         
-        // Admin: Publish Video Lecture
         document.getElementById('btn-add-lecture').addEventListener('click', async () => {
             let t = document.getElementById('admin-lec-title').value;
             let l = document.getElementById('admin-lec-link').value;
@@ -627,7 +714,6 @@
             fetchLectures();
         });
 
-        // Admin: Upload PDF/PPT Material File Asset 
         document.getElementById('btn-add-material').addEventListener('click', async () => {
             let title = document.getElementById('admin-mat-title').value;
             let fileElement = document.getElementById('admin-mat-file').files[0];
@@ -641,20 +727,32 @@
                 let downloadUrl = await getDownloadURL(snapshot.ref);
                 
                 await addDoc(collection(db, "materials"), {
-                    title: title,
-                    fileUrl: downloadUrl,
-                    fileName: fileElement.name,
-                    timestamp: new Date().toISOString()
+                    title: title, fileUrl: downloadUrl, fileName: fileElement.name, timestamp: new Date().toISOString()
                 });
                 
                 showToast("Material asset synced live successfully.");
                 document.getElementById('admin-mat-title').value = '';
                 document.getElementById('admin-mat-file').value = '';
                 fetchMaterials();
-            } catch (err) {
-                showToast(`Asset upload processing aborted: ${err.message}`, "error");
-            }
+            } catch (err) { showToast(`Asset upload processing aborted: ${err.message}`, "error"); }
         });
+
+        // NEW: Fetch System & Profile Notifications for Admin
+        async function fetchAdminNotifications() {
+            const snap = await getDocs(collection(db, "notifications"));
+            let html = '';
+            snap.forEach(doc => {
+                let n = doc.data();
+                let displayDate = new Date(n.date).toLocaleString();
+                html += `
+                <div class="admin-comment-item" style="border-left-color: var(--warning);">
+                    <div style="font-size:0.75rem; color:var(--warning); font-weight:bold;">🕒 ${displayDate}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">👤 ${n.studentName} (${n.studentEmail})</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-top:5px;">📝 <b>Changed:</b> ${n.message}</div>
+                </div>`;
+            });
+            document.getElementById('admin-notifications-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No system notifications.</p>";
+        }
 
         async function fetchAdminComments() {
             const snap = await getDocs(collection(db, "comments"));
@@ -673,6 +771,7 @@
 
         async function fetchAdminDirectory() {
             fetchAdminComments();
+            fetchAdminNotifications();
             const snap = await getDocs(collection(db, "users"));
             let html = '';
             snap.forEach(doc => {
@@ -689,7 +788,6 @@
             document.getElementById('admin-users-list').innerHTML = html;
         }
 
-        // Login Configurations
         document.getElementById('btn-login').addEventListener('click', async () => {
             const e = document.getElementById('email').value, p = document.getElementById('password').value;
             if(!e || !p) return showToast("Credentials mapping data blank.", "error");
