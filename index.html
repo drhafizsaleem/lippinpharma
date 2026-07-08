@@ -81,8 +81,9 @@
 
         /* Admin UI System */
         .admin-header { background: #fff5f5; border-left: 4px solid var(--danger); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .user-list-item { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #edf2f7; }
-        .user-list-img { width: 42px; height: 42px; border-radius: 50%; background-size: cover; background-color: #f1f5f9; border: 1px solid #e2e8f0; }
+        .user-list-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid #edf2f7; }
+        .user-list-info-row { display: flex; align-items: center; gap: 15px; }
+        .user-list-img { width: 42px; height: 42px; border-radius: 50%; background-size: cover; background-color: #f1f5f9; border: 1px solid #e2e8f0; flex-shrink: 0; }
         .admin-comment-item { background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green); box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .admin-manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #edf2f7; font-size: 0.85rem; }
         .admin-manage-item:last-child { border-bottom: none; }
@@ -214,18 +215,9 @@
                     
                     <div id="edit-profile-form" class="hidden" style="text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
                         <h4 style="margin-top: 0; color: var(--dark-green);">Update Information</h4>
-                        <div class="input-group">
-                            <label>Full Name</label>
-                            <input type="text" id="edit-prof-name">
-                        </div>
-                        <div class="input-group">
-                            <label>Mobile / WhatsApp</label>
-                            <input type="tel" id="edit-prof-phone">
-                        </div>
-                        <div class="input-group">
-                            <label>College Name</label>
-                            <input type="text" id="edit-prof-college">
-                        </div>
+                        <div class="input-group"><label>Full Name</label><input type="text" id="edit-prof-name"></div>
+                        <div class="input-group"><label>Mobile / WhatsApp</label><input type="tel" id="edit-prof-phone"></div>
+                        <div class="input-group"><label>College Name</label><input type="text" id="edit-prof-college"></div>
                         <button class="btn btn-primary" id="btn-update-profile">Save Changes</button>
                         <button class="btn btn-google" id="btn-cancel-edit" style="margin-top: 10px;">Cancel</button>
                     </div>
@@ -245,20 +237,24 @@
                     <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled. Hello Arfi.</p>
                 </div>
 
+                <div class="content-card" style="border: 1px solid var(--danger);">
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--danger);">🔑 Gemini API Key Configuration</h3>
+                    <p style="font-size:0.8rem; margin: -5px 0 12px 0; color: var(--text-dark);">Replace or update the live Gemini engine key across all active user application clients instantly.</p>
+                    <div class="input-group"><input type="text" id="admin-gemini-input" placeholder="Paste active Gemini API cloud token"></div>
+                    <button class="btn btn-danger" id="btn-save-gemini">Sync & Deploy New Key Live</button>
+                </div>
+
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">🛠️ Manage Published Content</h3>
-                    <p style="font-size:0.8rem; margin: -5px 0 15px 0; color: var(--text-dark);">Remove lectures or materials from the database permanently.</p>
-                    
                     <h4 style="margin:5px 0; color:var(--primary-green);">Lectures</h4>
-                    <div id="admin-manage-lectures"><p style="font-size:0.85rem; color:var(--text-muted);">Loading lectures...</p></div>
-                    
+                    <div id="admin-manage-lectures"></div>
                     <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Study Materials</h4>
-                    <div id="admin-manage-materials"><p style="font-size:0.85rem; color:var(--text-muted);">Loading materials...</p></div>
+                    <div id="admin-manage-materials"></div>
                 </div>
 
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">🔔 System Notifications</h3>
-                    <div id="admin-notifications-list"><p style="font-size:0.85rem; color:var(--text-muted);">No new notifications.</p></div>
+                    <div id="admin-notifications-list"></div>
                 </div>
 
                 <div class="content-card">
@@ -271,26 +267,25 @@
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Upload PDF / PPT Materials</h3>
                     <div class="input-group"><input type="text" id="admin-mat-title" placeholder="Material Item Title"></div>
-                    
                     <div class="input-group" style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed var(--primary-green);">
-                        <p style="font-size: 0.8rem; margin: 0 0 8px 0; color: var(--text-muted);">Option 1: Choose a file from your device</p>
-                        <input type="file" id="admin-mat-file" accept=".pdf,.ppt,.pptx,.doc,.docx" style="background: white;">
-                        <div style="text-align: center; margin: 10px 0; font-size: 0.85rem; font-weight: bold; color: gray;">OR</div>
-                        <p style="font-size: 0.8rem; margin: 0 0 8px 0; color: var(--text-muted);">Option 2: Paste a direct URL (Google Drive, External PDF)</p>
-                        <input type="url" id="admin-mat-link" placeholder="Paste Direct Link Here" style="background: white;">
+                        <input type="file" id="admin-mat-file" accept=".pdf,.ppt,.pptx,.doc,.docx">
+                        <div style="text-align: center; margin: 5px 0; font-size: 0.8rem; font-weight: bold; color: gray;">OR</div>
+                        <input type="url" id="admin-mat-link" placeholder="Paste Direct Link Here">
                     </div>
-
                     <button class="btn btn-primary" id="btn-add-material">Upload Reference Material</button>
                 </div>
 
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Student Comments & Queries</h3>
-                    <div id="admin-comments-list"><p style="font-size:0.85rem; color:var(--text-muted);">No feed records available.</p></div>
+                    <div id="admin-comments-list"></div>
                 </div>
 
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">Users Log Directory</h3>
-                    <div id="admin-users-list"></div>
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="text" id="admin-search-users" placeholder="🔍 Search students by name or college tracking indices..." style="border: 1.5px solid var(--danger);">
+                    </div>
+                    <div id="admin-users-list"><p style="font-size:0.85rem; color:var(--text-muted);">Loading log records...</p></div>
                 </div>
                 <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 15px;">🚪 Terminate Control Session</button>
             </div>
@@ -332,7 +327,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -344,7 +339,8 @@
             appId: "1:828017458601:web:ae687eea3978a7002198b8"
         };
 
-        const GEMINI_API_KEY = "AQ.Ab8RN6LDULmCGLDIll0iV_ypEW4ZGuHipGDIaDz5oq4bdjBhMg";
+        // Fallback Client Baseline Key Variable Token (Mutable)
+        let GEMINI_API_KEY = "AQ.Ab8RN6LDULmCGLDIll0iV_ypEW4ZGuHipGDIaDz5oq4bdjBhMg";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -356,6 +352,7 @@
         let currentUserData = null;
         let selectedFile = null;
         let allLectures = [];
+        let adminAllUsers = []; // Holds user caches for quick directory searching
 
         window.showToast = function(message, type = 'success') {
             const box = document.getElementById('notification-box');
@@ -374,7 +371,7 @@
             }
         }
 
-        // WhatsApp Features
+        // WhatsApp Setup
         document.getElementById('wa-toggle-btn').addEventListener('click', () => {
             const box = document.getElementById('wa-chat-box');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
@@ -383,8 +380,10 @@
         document.getElementById('btn-send-wa').addEventListener('click', () => {
             const customQuery = document.getElementById('wa-msg-text').value;
             const sName = currentUserData ? currentUserData.name : "Student";
-            const textString = `Hi This is ${sName} here from LippinPharma. \nQuery details: ${customQuery}`;
-            const targetURI = `https://wa.me/923156765582?text=${encodeURIComponent(textString)}`;
+            
+            // Fixed Requested Message Sequence Hook
+            const textString = `Hi This is ${sName} here from LippinPharma.`;
+            const targetURI = `https://wa.me/923156765582?text=${encodeURIComponent(textString + (customQuery ? "\nQuery: " + customQuery : ""))}`;
             window.open(targetURI, '_blank');
             document.getElementById('wa-msg-text').value = '';
             document.getElementById('wa-chat-box').style.display = 'none';
@@ -400,7 +399,6 @@
             return urlStr;
         }
 
-        // Image Handling
         const fileInput = document.getElementById('prof-pic-input');
         const picContainerFrame = document.getElementById('prof-pic-preview');
 
@@ -422,7 +420,6 @@
             }
         });
 
-        // Session Control
         const SESSION_TIMEOUT = 30 * 60 * 1000;
         function pingSession() { localStorage.setItem('sessionTick', Date.now()); }
         document.addEventListener('click', pingSession);
@@ -441,7 +438,22 @@
             } else pingSession();
         }
 
-        // User Auth Cycle
+        // Dynamic Cloud Gemini Fetch Token Logic
+        async function runCloudGeminiSync() {
+            try {
+                const configSnap = await getDoc(doc(db, "settings", "config"));
+                if(configSnap.exists() && configSnap.data().geminiKey) {
+                    GEMINI_API_KEY = configSnap.data().geminiKey;
+                    console.log("Gemini Live Core Engine Token Swapped Securely.");
+                }
+            } catch(e) { console.log("Baseline Hardcode Key Engaged."); }
+            
+            // Pre-populate input box for Admin dashboard
+            if(auth.currentUser && auth.currentUser.email === "uarajpoot31@gmail.com") {
+                document.getElementById('admin-gemini-input').value = GEMINI_API_KEY;
+            }
+        }
+
         setTimeout(() => {
             onAuthStateChanged(auth, async (user) => {
                 document.getElementById('splash-screen').style.opacity = '0';
@@ -449,6 +461,8 @@
                 if (user) {
                     verifyActiveSession();
                     currentUser = user;
+                    // Run token verification before checking components
+                    await runCloudGeminiSync();
                     checkUserProfile(user);
                 } else {
                     document.getElementById('login-screen').classList.remove('hidden');
@@ -459,14 +473,24 @@
         async function checkUserProfile(user) {
             const snap = await getDoc(doc(db, "users", user.uid));
             
-            if(user.email === "uarajpoot31@gmail.com") {
-                document.getElementById('admin-nav-item').classList.remove('hidden');
-                fetchAdminDirectory();
-                fetchAdminManageContent(); 
-            }
-
             if(snap.exists()) {
                 currentUserData = snap.data();
+                
+                // NEW CRITICAL PROTECTION SHIELD: Checking Blocked Status Metrics
+                if(currentUserData.isBlocked === true) {
+                    showToast("⛔ Access Denied: Your account has been blocked by Admin.", "error");
+                    setTimeout(() => {
+                        signOut(auth).then(() => { localStorage.clear(); window.location.reload(); });
+                    }, 2500);
+                    return;
+                }
+
+                if(user.email === "uarajpoot31@gmail.com") {
+                    document.getElementById('admin-nav-item').classList.remove('hidden');
+                    fetchAdminDirectory();
+                    fetchAdminManageContent(); 
+                }
+
                 updateProfileUI(currentUserData, user.email);
 
                 document.getElementById('login-screen').classList.add('hidden');
@@ -476,7 +500,7 @@
                 
                 fetchLectures();
                 fetchMaterials();
-                fetchStudentQueries(); // Load student's own comments & replies
+                fetchStudentQueries(); 
                 runDailyAIQuizSync(); 
             } else {
                 document.getElementById('login-screen').classList.add('hidden');
@@ -493,7 +517,7 @@
             document.getElementById('profile-page-pic').style.backgroundImage = `url(${srcPic})`;
         }
 
-        // Student Profile Edit
+        // Edit Profile Pipeline Setup
         document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
             document.getElementById('edit-profile-form').classList.remove('hidden');
             document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
@@ -536,7 +560,7 @@
             } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
         });
 
-        // Content Engines
+        // Content engines modules
         async function fetchLectures() {
             const snap = await getDocs(collection(db, "lectures"));
             allLectures = [];
@@ -600,10 +624,9 @@
             });
             document.getElementById(`cmt-${lecId}`).value = '';
             showToast("Comment dispatched to Admin workspace.");
-            fetchStudentQueries(); // refresh local view
+            fetchStudentQueries(); 
         }
 
-        // NEW: Fetch Student's Own Queries
         async function fetchStudentQueries() {
             const snap = await getDocs(collection(db, "comments"));
             let html = '';
@@ -623,7 +646,7 @@
             document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>You haven't asked any questions yet.</p>";
         }
 
-        // AI Engine
+        // Gemini Engine Architecture Code Block
         async function queryGeminiModel(promptMessage) {
             if(!GEMINI_API_KEY) return "ERROR";
             try {
@@ -650,7 +673,7 @@
                     let parsedArr = JSON.parse(rawAIString.replace(/```json/g, "").replace(/```/g, "").trim());
                     await setDoc(doc(db, "daily_quizzes", todayKey), { questions: parsedArr, generatedAt: todayKey });
                     renderEvaluationBlock(parsedArr);
-                } catch(err) { console.log("Fallback logic applied."); }
+                } catch(err) { console.log("Fallback placeholder initialization."); }
             }
         }
 
@@ -709,8 +732,24 @@
         }
 
         // ==========================================
-        // ADMINISTRATIVE ACTIONS
+        // ADMINISTRATIVE ACTIONS HANDLERS
         // ==========================================
+
+        // NEW FEATURE: Update & Publish New Gemini Token to the Cloud Node
+        document.getElementById('btn-save-gemini').addEventListener('click', async () => {
+            let inputKey = document.getElementById('admin-gemini-input').value;
+            if(!inputKey) return showToast("API Key cannot be blank.", "error");
+            
+            showToast("Deploying new Gemini Key across database cloud nodes...", "success");
+            try {
+                await setDoc(doc(db, "settings", "config"), {
+                    geminiKey: inputKey.trim(),
+                    updatedAt: new Date().toISOString()
+                });
+                GEMINI_API_KEY = inputKey.trim();
+                showToast("Key successfully pushed live global app state!", "success");
+            } catch(e) { showToast(`Failed to deploy: ${e.message}`, "error"); }
+        });
 
         async function fetchAdminManageContent() {
             const lecSnap = await getDocs(collection(db, "lectures"));
@@ -762,7 +801,6 @@
             fetchLectures(); fetchAdminManageContent();
         });
 
-        // NEW: Dual Upload Mechanism (File OR Direct Link)
         document.getElementById('btn-add-material').addEventListener('click', async () => {
             let title = document.getElementById('admin-mat-title').value;
             let fileElement = document.getElementById('admin-mat-file').files[0];
@@ -770,7 +808,6 @@
             
             if(!title) return showToast("Title is missing.", "error");
             if(!fileElement && !linkInput) return showToast("Provide a file OR a direct link.", "error");
-
             showToast("Processing material data...");
             
             try {
@@ -786,11 +823,9 @@
                     downloadUrl = linkInput;
                     fName = "External Link";
                 }
-                
                 await addDoc(collection(db, "materials"), {
                     title: title, fileUrl: downloadUrl, fileName: fName, timestamp: new Date().toISOString()
                 });
-                
                 showToast("Material asset synced live successfully.");
                 document.getElementById('admin-mat-title').value = '';
                 document.getElementById('admin-mat-file').value = '';
@@ -814,7 +849,6 @@
             document.getElementById('admin-notifications-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No system notifications.</p>";
         }
 
-        // NEW: Admin Can Reply To Student Comments
         async function fetchAdminComments() {
             const snap = await getDocs(collection(db, "comments"));
             let html = '';
@@ -838,30 +872,81 @@
         window.submitAdminReply = async function(commentId) {
             let text = document.getElementById(`admin-reply-${commentId}`).value;
             if(!text) return showToast("Reply cannot be empty.", "error");
-            
             showToast("Sending reply to student...", "success");
             await updateDoc(doc(db, "comments", commentId), { adminReply: text });
             showToast("Reply sent successfully.");
-            fetchAdminComments(); // Refresh list
+            fetchAdminComments(); 
         }
 
+        // Core Users Directory Rendering Code
         async function fetchAdminDirectory() {
             fetchAdminComments();
             fetchAdminNotifications();
             const snap = await getDocs(collection(db, "users"));
-            let html = '';
+            adminAllUsers = [];
             snap.forEach(doc => {
-                let u = doc.data();
+                adminAllUsers.push({ id: doc.id, ...doc.data() });
+            });
+            renderAdminUserDirectory(adminAllUsers);
+        }
+
+        function renderAdminUserDirectory(usersArr) {
+            let html = '';
+            usersArr.forEach(u => {
+                // Ensure number format strips special string characters
+                let cleanPhone = u.phone ? u.phone.replace(/[^0-9]/g, '') : "";
+                // Handle Pakistan formatting fallback index
+                if(cleanPhone.startsWith('0')) cleanPhone = '92' + cleanPhone.substring(1);
+
                 html += `
                 <div class="user-list-item">
-                    <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
-                    <div>
-                        <div style="font-weight:bold; font-size:0.9rem;">${u.name}</div>
-                        <div style="font-size:0.72rem; color:gray;">${u.college} | Log: ${u.phone}</div>
+                    <div class="user-list-info-row">
+                        <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
+                        <div>
+                            <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">
+                                ${u.name} ${u.isBlocked ? '⚠️ [BLOCKED]' : ''}
+                            </div>
+                            <div style="font-size:0.72rem; color:gray;">${u.college} | ID: ${u.email}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; gap:8px; width:100%; margin-top:5px;">
+                        <button class="btn-delete" style="flex:1; padding: 6px; background: ${u.isBlocked ? 'var(--primary-green)' : 'var(--danger)'};" onclick="toggleBlockUser('${u.id}', ${u.isBlocked || false})">
+                            ${u.isBlocked ? '✅ Unblock User' : '🚫 Block User'}
+                        </button>
+                        <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1; background: var(--whatsapp); color: white; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 4px;">
+                            💬 WhatsApp Chat
+                        </a>
                     </div>
                 </div>`;
             });
-            document.getElementById('admin-users-list').innerHTML = html;
+            document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No students mapped inside logs container.</p>";
+        }
+
+        // Live Action: Admin directory user client filtering engine search
+        document.getElementById('admin-search-users').addEventListener('input', (e) => {
+            let val = e.target.value.toLowerCase();
+            let matches = adminAllUsers.filter(u => 
+                (u.name && u.name.toLowerCase().includes(val)) || 
+                (u.college && u.college.toLowerCase().includes(val)) ||
+                (u.email && u.email.toLowerCase().includes(val))
+            );
+            renderAdminUserDirectory(matches);
+        });
+
+        // Live Action Toggle Rule: Block & Unblock System Pipeline Execution
+        window.toggleBlockUser = async function(userId, currentBlockStatus) {
+            let msg = currentBlockStatus ? "Unblock this student's registration profile parameters?" : "Completely block this student from accessing the app container platform?";
+            if(confirm(msg)) {
+                showToast("Modifying user status registry...", "success");
+                try {
+                    await updateDoc(doc(db, "users", userId), {
+                        isBlocked: !currentBlockStatus
+                    });
+                    showToast("Student database authorization record updated successfully.", "success");
+                    fetchAdminDirectory(); // Re-render live directories
+                } catch(e) { showToast(`Failed execution status rule change: ${e.message}`, "error"); }
+            }
         }
 
         // Base Auth Setup
@@ -883,7 +968,6 @@
             catch (err) { showToast(err.message, "error"); }
         });
 
-        // Bug-Free Profile Save with Bypass Error Handling
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
             const name = document.getElementById('prof-name').value;
             const phone = document.getElementById('prof-phone').value;
@@ -891,7 +975,6 @@
             if(!name || !phone || !college) return showToast("All identity details verified parameters mandatory.", "error");
             
             showToast("Syncing user account package database...");
-            
             let picUrl = "";
             if(selectedFile) {
                 try {
@@ -899,32 +982,24 @@
                     await uploadBytes(sRef, selectedFile);
                     picUrl = await getDownloadURL(sRef);
                 } catch(imgErr) {
-                    console.error("Storage Rule Error", imgErr);
-                    showToast("Image block. Saving profile without picture due to missing storage rules.", "error");
+                    showToast("Saving profile without picture due to missing storage parameters.", "error");
                 }
             }
             
             try {
                 await setDoc(doc(db, "users", currentUser.uid), {
-                    name, phone, college, email: currentUser.email, profilePic: picUrl, createdAt: new Date().toISOString()
+                    name, phone, college, email: currentUser.email, profilePic: picUrl, isBlocked: false, createdAt: new Date().toISOString()
                 });
-                
-                // Explicitly switch screens immediately to prevent stuck forms
                 document.getElementById('profile-screen').classList.add('hidden');
                 document.getElementById('dashboard-screen').classList.remove('hidden');
                 document.getElementById('wa-widget').style.display = 'block';
                 
-                currentUserData = {name, phone, college, profilePic: picUrl};
+                currentUserData = {name, phone, college, profilePic: picUrl, isBlocked: false};
                 updateProfileUI(currentUserData, currentUser.email);
                 
-                fetchLectures();
-                fetchMaterials();
-                fetchStudentQueries();
+                fetchLectures(); fetchMaterials(); fetchStudentQueries();
                 showToast("Profile successfully configured!", "success");
-
-            } catch(dbErr) {
-                showToast(`Database write failed: ${dbErr.message}`, "error");
-            }
+            } catch(dbErr) { showToast(`Database write failed: ${dbErr.message}`, "error"); }
         });
 
         const forceTerminationHandler = () => {
