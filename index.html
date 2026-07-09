@@ -51,12 +51,13 @@
         .profile-pic-container span { font-size: 1.6rem; margin-bottom: 2px; }
 
         /* Action Buttons */
-        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; font-size: 1rem; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; position: relative; z-index: 10; }
         .btn-primary { background: var(--primary-green); color: var(--white); }
         .btn-primary:hover:not(:disabled) { background: var(--dark-green); }
         .btn-danger { background: var(--danger); color: var(--white); }
         .btn-blue { background: var(--blue); color: var(--white); }
         .btn-google { background: var(--white); color: var(--text-dark); border: 1px solid #e2e8f0; margin-top: 15px; }
+        .btn-google:hover { background: #f1f5f9; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed !important; }
 
         /* Master Application Layout Viewports */
@@ -198,19 +199,19 @@
                     <div id="dashboard-user-pic" style="width: 45px; height: 45px; border-radius: 50%; background-size:cover; border:2px solid var(--primary-green); background-image:url('https://via.placeholder.com/45')"></div>
                 </div>
                 
-                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
+                <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); color: white; padding: 25px 20px; border-radius: 12px; box-shadow: 0 8px 20px rgba(6, 156, 84, 0.25);">
                     <h3 style="margin: 0 0 5px 0; font-size: 1.3rem;">Pharmacology Evaluation</h3>
-                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">Evaluate your progress parameters via manual structural topic tests.</p>
-                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Launch Test Matrix ⏱️</button>
+                    <p>Test your concepts parameters using Lippincott pharmacology criteria logs.</p>
+                    <button onclick="switchTab('tab-tests')" style="background: white; color: var(--primary-green); border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;">Start Test ⏱️</button>
                 </div>
-                <h3 style="color: var(--text-dark); margin-bottom: 12px; font-size: 1.1rem;">Latest Uploads</h3>
-                <div id="home-recent-activity"><p style="font-size:0.85rem; color:var(--text-muted);">Syncing platform activity feed...</p></div>
+                <h3>Latest Activity Feed</h3>
+                <div id="home-recent-activity"><p style="font-size:0.85rem; color:gray;">System feed live...</p></div>
             </div>
 
             <div id="tab-lectures" class="app-tab">
                 <h2 style="color: var(--dark-green); margin-bottom: 15px;">Smart Lectures</h2>
                 <div style="margin-bottom: 20px;">
-                    <input type="text" id="search-lectures" placeholder="🔍 Search video entries..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
+                    <input type="text" id="search-lectures" placeholder="🔍 Filter topics index..." style="border-radius: 25px; padding-left: 20px; border: 2px solid var(--primary-green);">
                 </div>
                 <div id="lectures-container"></div>
             </div>
@@ -222,72 +223,66 @@
             </div>
 
             <div id="tab-tests" class="app-tab">
-                <h2 style="color: var(--dark-green); margin-bottom: 10px;">Topic Tests</h2>
+                <h2 style="color: var(--dark-green); margin-bottom: 10px;">Topic-Wise Manual Evaluation</h2>
                 
                 <div class="content-card" style="background: var(--light-green); border: 1px solid var(--primary-green);">
-                    <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">📚 Uploaded Manual Evaluation Tests</h3>
+                    <h3 style="margin-top:0; color: var(--dark-green); font-size:1.1rem;">📚 Available Syllabus Topics</h3>
                     <div id="manual-topics-container" style="display: flex; flex-wrap: wrap;"></div>
                 </div>
 
                 <div class="content-card" style="border: 1px dashed var(--blue);">
-                    <h3 style="margin-top:0; color: var(--blue); font-size:1.1rem;">⚡ Custom Generator Engine</h3>
-                    <div style="display: flex; gap:10px; margin-bottom:10px;">
-                        <input type="text" id="ai-topic" placeholder="Topic Name (e.g. Beta-Blockers)" style="flex:2;">
-                        <input type="number" id="ai-count" placeholder="Count" min="1" max="20" value="5" style="flex:1;">
+                    <h3 style="margin-top:0; color: var(--blue); font-size:1.1rem;">⚡ Dynamic Generator Node</h3>
+                    <div style="display: flex; gap:10px;">
+                        <input type="text" id="ai-topic" placeholder="Topic Target">
+                        <input type="number" id="ai-count" value="5" style="width:70px;">
                     </div>
-                    <button class="btn btn-blue" id="btn-generate-ai-test">Run Generator Script</button>
+                    <button class="btn btn-blue" id="btn-generate-ai-test">Execute Generator Script</button>
                 </div>
 
                 <div class="content-card" id="quiz-block-space">
-                    <h3 id="quiz-title-heading" style="margin-top:0; color:var(--primary-green);">Evaluation Arena</h3>
-                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Pick an available structural unit test to start execution.</p></div>
+                    <h3 id="quiz-title-heading">Quiz Sheet Window</h3>
+                    <div id="quiz-render-area"><p style="font-size:0.9rem; color:var(--text-muted);">Select a test above to begin.</p></div>
                     <button class="btn btn-primary hidden" id="btn-submit-test" style="margin-top: 20px;">Submit Evaluation Test</button>
                     <div id="quiz-result-area" style="margin-top: 15px; font-weight: bold; font-size: 1.1rem; text-align: center; color: var(--primary-green);"></div>
                 </div>
             </div>
 
             <div id="tab-profile" class="app-tab">
-                <h2 style="color: var(--dark-green); margin-bottom: 20px;">Profile Settings</h2>
+                <h2 style="color: var(--dark-green); margin-bottom: 20px;">My Registration Profile</h2>
                 <div class="content-card" style="text-align: center;">
                     
                     <input type="file" id="edit-prof-pic-input" accept="image/*" style="display:none !important;">
                     <div id="profile-page-pic" style="width: 100px; height: 100px; border-radius: 50%; background-size:cover; margin: 0 auto 15px auto; border:3px solid var(--primary-green); cursor:pointer;" title="Click to update image"></div>
                     
-                    <h3 id="profile-page-name" style="margin:0 0 5px 0;">Loading Account</h3>
-                    <p id="profile-page-email" style="margin:0 0 15px 0; color:var(--text-muted); font-size:0.9rem;"></p>
+                    <h3 id="profile-page-name">Student Account</h3>
+                    <p id="profile-page-email" style="color: gray; font-size: 0.9rem;"></p>
                     
-                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 200px; margin: 0 auto 15px auto;">✏️ Edit Profile</button>
+                    <button class="btn btn-google" id="btn-edit-profile-trigger" style="max-width: 180px; margin: 0 auto 15px auto;">✏️ Edit Details</button>
                     
-                    <div id="edit-profile-form" class="hidden" style="text-align: left; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                        <h4 style="margin-top: 0; color: var(--dark-green);">Modify Registration Parameters</h4>
+                    <div id="edit-profile-form" class="hidden" style="text-align: left; background:#f8fafc; padding:15px; border-radius:12px; border:1px solid #e2e8f0;">
                         <input type="text" id="edit-prof-name" placeholder="Full Name">
                         <input type="tel" id="edit-prof-phone" placeholder="WhatsApp Phone">
                         <input type="text" id="edit-prof-college" placeholder="College Name">
-                        <button class="btn btn-primary" id="btn-update-profile">Commit Database Save</button>
-                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top: 10px;">Cancel</button>
+                        <button class="btn btn-primary" id="btn-update-profile">Save System Updates</button>
+                        <button class="btn btn-google" id="btn-cancel-edit" style="margin-top:5px;">Cancel</button>
                     </div>
 
-                    <button class="btn btn-danger" id="btn-logout" style="max-width:200px; margin:10px auto 0 auto;">🚪 Logout Securely</button>
-                    <p style="margin-top: 25px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
+                    <button class="btn btn-danger" id="btn-logout" style="max-width: 180px; margin: 10px auto 0 auto;">🚪 Logout Session</button>
                 </div>
-                
-                <div class="content-card" style="text-align: left; margin-top: 15px;">
-                    <h3 style="color: var(--dark-green); margin-top: 0;">My Queries & Replies</h3>
-                    <div id="student-queries-list"></div>
-                </div>
+                <div class="content-card"><h3>My Queries History Logs</h3><div id="student-queries-list"></div></div>
+                <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Powered by Arfi</p>
             </div>
 
             <div id="tab-admin" class="app-tab">
                 <div class="admin-header">
                     <h2 style="margin:0; color:var(--danger);">Admin Control Workspace</h2>
-                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Node Enabled.</p>
+                    <p style="margin:2px 0 0 0; font-size:0.82rem;">Superuser Portal Enabled.</p>
                 </div>
 
                 <div class="content-card" style="border: 1px solid var(--primary-green);">
                     <h3 style="margin-top:0; font-size:1rem; color:var(--primary-green);">📝 Bulk Upload Questions</h3>
-                    <p style="font-size:0.8rem; margin: -5px 0 10px 0;">Paste multiple entries securely separating blocks via standard format rows.</p>
                     <input type="text" id="admin-bulk-topic" placeholder="Topic Title (e.g. Autonomic Nervous System)">
-                    <textarea id="admin-bulk-text" rows="6" placeholder="Question: What is X?\nA: Option 1\nB: Option 2\nC: Option 3\nD: Option 4\nAnswer: B"></textarea>
+                    <textarea id="admin-bulk-text" rows="6" placeholder="Question: Text?\nA: Option\nB: Option\nC: Option\nD: Option\nAnswer: B"></textarea>
                     <button class="btn btn-primary" id="btn-add-bulk-mcq">Commit Bulk Save Node</button>
                 </div>
 
@@ -299,20 +294,17 @@
                 </div>
 
                 <div class="content-card" style="border: 1px solid var(--warning);">
-                    <h3 style="margin-top:0; font-size:1rem; color:var(--warning);">🔑 AI API Key Configuration</h3>
-                    <p style="font-size:0.75rem; margin:-5px 0 10px 0; color:gray;">Paste 'AIzaSy...' key to activate generator.</p>
+                    <h3 style="margin-top:0; font-size:1rem; color:var(--warning);">🔑 Token Provider Configuration Configuration</h3>
+                    <p style="font-size:0.8rem; margin:-5px 0 10px 0; color:gray;">Paste 'AIzaSy...' API key here.</p>
                     <input type="text" id="admin-gemini-input" placeholder="Paste Token Key Target">
                     <button class="btn" style="background:var(--warning); color:white;" id="btn-save-gemini">Synchronize Keys Live</button>
                 </div>
 
                 <div class="content-card">
                     <h3 style="margin-top:0; font-size:1rem;">🛠️ Content Control Managers</h3>
-                    <h4 style="margin:5px 0; color:var(--primary-green);">Lectures View Network</h4>
-                    <div id="admin-manage-lectures"></div>
-                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Materials Registry Storage</h4>
-                    <div id="admin-manage-materials"></div>
-                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Manual Evaluation Unit Tests</h4>
-                    <div id="admin-manage-mcqs"></div>
+                    <h4 style="margin:5px 0; color:var(--primary-green);">Lectures View Network</h4><div id="admin-manage-lectures"></div>
+                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Materials Registry Storage</h4><div id="admin-manage-materials"></div>
+                    <h4 style="margin:15px 0 5px 0; color:var(--primary-green);">Manual Evaluation Unit Tests</h4><div id="admin-manage-mcqs"></div>
                 </div>
 
                 <div class="content-card">
@@ -323,51 +315,39 @@
                 </div>
 
                 <div class="content-card">
-                    <h3 style="margin-top:0; font-size:1rem;">Upload External PDF / PPT / Link</h3>
+                    <h3 style="margin-top:0; font-size:1rem;">Upload External PDF / PPT</h3>
                     <input type="text" id="admin-mat-title" placeholder="Package Title">
-                    <input type="url" id="admin-mat-link" placeholder="Paste External File URL (Drive/Dropbox/PDF)">
+                    <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed var(--primary-green); margin-bottom:10px;">
+                        <input type="file" id="admin-mat-file" accept=".pdf,.ppt,.pptx,.doc,.docx" style="margin-bottom:0;">
+                        <div style="text-align: center; margin: 5px 0; font-size: 0.8rem; font-weight: bold; color: gray;">OR</div>
+                        <input type="url" id="admin-mat-link" placeholder="Direct Package Uniform Link Address" style="margin-bottom:0;">
+                    </div>
                     <button class="btn btn-primary" id="btn-add-material">Publish File Node</button>
                 </div>
 
+                <div class="content-card"><h3>Student Feedback Feed</h3><div id="admin-comments-list"></div></div>
                 <div class="content-card">
-                    <h3 style="margin-top:0; font-size:1rem;">Student Comments Feed</h3>
-                    <div id="admin-comments-list"></div>
-                </div>
-
-                <div class="content-card">
-                    <h3 style="margin-top:0; font-size:1rem;">Users Log Directory</h3>
-                    <input type="text" id="admin-search-users" placeholder="🔍 Search identity records..." style="margin-bottom: 15px; border-color:var(--danger);">
+                    <h3>Registered Profiles Logs</h3>
+                    <input type="text" id="admin-search-users" placeholder="🔍 Search identity records..." style="border-color:var(--danger);">
                     <div id="admin-users-list"></div>
                 </div>
-                <button class="btn btn-danger" id="btn-admin-logout" style="margin-top: 15px;">🚪 Terminate Control Session</button>
+                <button class="btn btn-danger" id="btn-admin-logout">🚪 Close Superuser Control Workspace</button>
             </div>
         </div>
 
         <div class="nav-bar">
-            <div class="nav-item active" onclick="switchTab('tab-home', this)">
-                <span class="nav-icon">🏠</span><span>Home</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('tab-lectures', this)">
-                <span class="nav-icon">📺</span><span>Lectures</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('tab-material', this)">
-                <span class="nav-icon">📥</span><span>Material</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('tab-tests', this)">
-                <span class="nav-icon">📝</span><span>Tests</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('tab-profile', this)">
-                <span class="nav-icon">👤</span><span>Profile</span>
-            </div>
-            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)">
-                <span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span>
-            </div>
+            <div class="nav-item active" onclick="switchTab('tab-home', this)"><span class="nav-icon">🏠</span><span>Home</span></div>
+            <div class="nav-item" onclick="switchTab('tab-lectures', this)"><span class="nav-icon">📺</span><span>Lectures</span></div>
+            <div class="nav-item" onclick="switchTab('tab-material', this)"><span class="nav-icon">📥</span><span>Material</span></div>
+            <div class="nav-item" onclick="switchTab('tab-tests', this)"><span class="nav-icon">📝</span><span>Tests</span></div>
+            <div class="nav-item" onclick="switchTab('tab-profile', this)"><span class="nav-icon">👤</span><span>Profile</span></div>
+            <div class="nav-item hidden" id="admin-nav-item" onclick="switchTab('tab-admin', this)"><span class="nav-icon">⚙️</span><span class="admin-nav">Admin</span></div>
         </div>
     </div>
 
     <div id="wa-widget">
         <div id="wa-chat-box">
-            <h4 style="margin:0 0 5px 0; color:var(--dark-green);">Direct Line Helpdesk</h4>
+            <h4 style="margin:0 0 5px 0;">Helpdesk Direct</h4>
             <textarea id="wa-msg-text" rows="3" placeholder="Write query detail parameters..."></textarea>
             <button class="btn btn-primary" id="btn-send-wa" style="background:var(--whatsapp);">Launch WhatsApp Secure</button>
         </div>
@@ -380,6 +360,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
         // FIREBASE CONNECTIVITY
         const firebaseConfig = {
@@ -394,6 +375,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
         // GLOBAL VARIABLES
@@ -450,7 +432,7 @@
                 <div style="padding: 40px; font-family: sans-serif; color: #2d3748; background: #ffffff;">
                     <div style="text-align: center; border-bottom: 3px solid #069C54; padding-bottom: 15px; margin-bottom: 30px;">
                         <h1 style="color: #047840; margin: 0; font-size: 26px;">${node.title}</h1>
-                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 13px;">Official Reference Notes Summary Node</p>
+                        <p style="color: #718096; margin: 5px 0 0 0; font-size: 13px;">Official Reference Notes Summary</p>
                     </div>
                     <div style="font-size: 15px; line-height: 1.8; white-space: pre-wrap; text-align: justify;">
                         ${node.content}
@@ -497,7 +479,7 @@
             if(targetFile) {
                 const streamReader = new FileReader();
                 streamReader.onload = ev => {
-                    base64ProfilePicString = ev.target.result;
+                    base64ProfilePicString = ev.target.result; 
                     triggerBoxFrameNode.style.backgroundImage = `url(${base64ProfilePicString})`;
                     triggerBoxFrameNode.innerHTML = '';
                 };
@@ -596,10 +578,7 @@
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('profile-screen').classList.remove('hidden');
                 }
-            } catch(e) {
-                // If read fails completely
-                showToast("System Network Error.", "error");
-            }
+            } catch(e) { showToast("System Network Error.", "error"); }
         }
 
         function updateProfileUI(data, email) {
@@ -632,6 +611,7 @@
 
         document.getElementById('btn-google').addEventListener('click', async () => { 
             try { 
+                showToast("Opening Google Auth...");
                 await signInWithPopup(auth, provider); 
                 localStorage.setItem('sessionTick', Date.now());
             } catch (err) { showToast("Google Login Cancelled", "error"); } 
@@ -639,10 +619,7 @@
 
         const performSafeLogout = () => {
             showToast("Closing secure connection...", "success");
-            signOut(auth).then(() => { 
-                localStorage.clear(); 
-                window.location.reload(); 
-            });
+            signOut(auth).then(() => { localStorage.clear(); window.location.reload(); });
         };
         document.getElementById('btn-logout').addEventListener('click', performSafeLogout);
         document.getElementById('btn-admin-logout').addEventListener('click', performSafeLogout);
@@ -653,7 +630,7 @@
             showToast("Writing synchronized profile elements...");
             try {
                 await setDoc(doc(db, "users", currentUser.uid), { name, phone, college, email: currentUser.email, profilePic: base64ProfilePicString || "", isBlocked: false, createdAt: new Date().toISOString() });
-                window.location.reload(); // Reload to fetch fresh data
+                window.location.reload(); 
             } catch(dbErr) { showToast("Database rules intercept.", "error"); }
         });
 
@@ -685,7 +662,7 @@
                     showToast(`Test loaded successfully.`, "success");
                 }
             } else {
-                currentTestQuestions = identifier; // AI passes the array directly
+                currentTestQuestions = identifier; 
                 renderEvaluationBlock(currentTestQuestions);
                 document.getElementById('btn-submit-test').classList.remove('hidden');
             }
@@ -711,21 +688,13 @@
             userSelectedAnswers[qIndex] = oIndex;
             let parent = document.getElementById(`opts-group-${qIndex}`);
             let allOpts = parent.querySelectorAll('.quiz-option');
-            allOpts.forEach(el => {
-                el.style.background = '#f8fafc';
-                el.style.borderColor = '#e2e8f0';
-                el.style.fontWeight = '500';
-            });
+            allOpts.forEach(el => { el.style.background = '#f8fafc'; el.style.borderColor = '#e2e8f0'; el.style.fontWeight = '500'; });
             let selectedEl = document.getElementById(`opt-${qIndex}-${oIndex}`);
-            selectedEl.style.background = '#d1fae5';
-            selectedEl.style.borderColor = 'var(--primary-green)';
-            selectedEl.style.fontWeight = 'bold';
+            selectedEl.style.background = '#d1fae5'; selectedEl.style.borderColor = 'var(--primary-green)'; selectedEl.style.fontWeight = 'bold';
         }
 
         document.getElementById('btn-submit-test').addEventListener('click', () => {
-            if(userSelectedAnswers.includes(null)) {
-                return showToast("Please answer all questions before submitting.", "error");
-            }
+            if(userSelectedAnswers.includes(null)) return showToast("Please answer all questions before submitting.", "error");
             
             let score = 0;
             currentTestQuestions.forEach((q, idx) => {
@@ -737,6 +706,8 @@
                 
                 if(userAns === correctAns) {
                     score++;
+                    document.getElementById(`opt-${idx}-${userAns}`).style.background = '#d1fae5';
+                    document.getElementById(`opt-${idx}-${userAns}`).style.borderColor = 'var(--primary-green)';
                 } else {
                     document.getElementById(`opt-${idx}-${userAns}`).style.background = '#fee2e2';
                     document.getElementById(`opt-${idx}-${userAns}`).style.borderColor = 'var(--danger)';
@@ -747,163 +718,74 @@
 
             document.getElementById('btn-submit-test').classList.add('hidden');
             document.getElementById('quiz-result-area').innerText = `Evaluation Completed! Your Score: ${score} / ${currentTestQuestions.length}`;
-            showToast(`Test Submitted!`, "success");
+            showToast(`Test Submitted! Score: ${score}`, "success");
         });
 
         // AI Engine Request
         document.getElementById('btn-generate-ai-test').addEventListener('click', async () => {
             let topic = document.getElementById('ai-topic').value; 
             let count = document.getElementById('ai-count').value || 5;
-            if(!topic) return showToast("Target matrix key blank.", "error");
+            if(!topic) return showToast("Topic name is blank.", "error");
             if(!GEMINI_API_KEY) return showToast("API Key Missing! Ask Admin to Sync.", "error");
             
-            showToast("Parsing topic parameters via remote system...");
+            showToast("Calling AI Engine... Please hold.", "success");
 
-            let strictRulePrompt = `You are a validator for Lippincott Pharmacology. The user wants ${count} multiple choice questions about "${topic}". CRITICAL SECURITY CHECK: If "${topic}" is completely unrelated to pharmacology, medicine, or drugs, you must reply exactly with the single word ERROR. If valid, generate questions as a clean JSON array structure: [{"question": "Query", "options": ["1","2","3","4"], "correctIndex": 0}]. Do NOT add markdown blocks like \`\`\`json. Return pure array text only.`;
-            
+            let prompt = `Create exactly ${count} multiple choice questions about "${topic}" strictly related to Pharmacology. Return ONLY a valid JSON array in this format: [{"question":"Text","options":["A","B","C","D"],"correctIndex":0}]. Do not include any other markdown or text.`;
+
             try {
                 let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: strictRulePrompt }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
-                let data = await response.json(); 
-                let resultPayload = data.candidates[0].content.parts[0].text;
-                
-                if(resultPayload.includes("ERROR") || resultPayload === "ERROR") {
-                    return showToast("⚠️ Topic rejected or Key Expired.", "error");
-                }
-                
-                let cleaned = resultPayload.replace(/```json/g, "").replace(/```/g, "").trim();
-                let s = cleaned.indexOf('['); let e = cleaned.lastIndexOf(']');
+
+                let data = await response.json();
+                if(data.error) return showToast(`AI Error: ${data.error.message}`, "error");
+
+                let textResponse = data.candidates[0].content.parts[0].text;
+                let cleanedText = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
+                let s = cleanedText.indexOf('['); let e = cleanedText.lastIndexOf(']');
                 
                 if(s !== -1 && e !== -1) {
-                    let quizData = JSON.parse(cleaned.substring(s, e + 1));
-                    document.getElementById('quiz-title-heading').innerText = `Dynamic AI Quiz: ${topic}`; 
-                    startTestMode(quizData, true);
-                    showToast("Test parameters locked and loaded.", "success");
-                } else { showToast("⚠️ Format generation structural issue.", "error"); }
-            } catch(e) {
-                showToast("⚠️ Network issue or invalid AI Key.", "error");
-            }
+                    let quizArray = JSON.parse(cleanedText.substring(s, e + 1));
+                    document.getElementById('quiz-title-heading').innerText = `AI Custom Quiz: ${topic}`; 
+                    startTestMode(quizArray, true);
+                    showToast("AI Test Generated!", "success");
+                } else { showToast("Failed to extract structural JSON.", "error"); }
+            } catch (err) { showToast("Network error or invalid API token format.", "error"); }
         });
 
-        // FETCH MATERIALS AND LECTURES
+
+        // ----------------------------------------------------
+        // PDF VIEW & DOWNLOAD MECHANICS
+        // ----------------------------------------------------
         async function fetchMaterials() {
             const snap = await getDocs(collection(db, "materials"));
             localMaterialsArrayCache = []; let html = '';
             snap.forEach(doc => {
-                let item = doc.data(); localMaterialsArrayCache.push({ id: doc.id, ...item });
+                let item = doc.data(); 
+                localMaterialsArrayCache.push({ id: doc.id, ...item });
                 let isComposed = item.type === 'composed';
                 let actionBtn = isComposed ? 
                     `<div style="display:flex; gap:5px;">
-                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; cursor:pointer;">👁️ View</button>
-                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; cursor:pointer;">⬇️ PDF</button>
+                        <button onclick="viewComposedNote('${doc.id}')" style="background:var(--blue); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">👁️ View</button>
+                        <button onclick="downloadComposedPDF('${doc.id}')" style="background:var(--primary-green); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">⬇️ PDF</button>
                     </div>` :
-                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:0.82rem; font-weight:bold; display:inline-block;">Launch Link</a>`;
+                    `<a href="${item.fileUrl}" target="_blank" style="background:var(--primary-green); color:white; text-decoration:none; padding:8px 14px; border-radius:6px; display:inline-block;">Launch Link</a>`;
                 
-                html += `
-                <div class="content-card" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-weight:600; color:var(--text-dark);">${isComposed ? '📝' : '📄'} ${item.title}</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">${isComposed ? 'Smart Format Note' : 'External Resource'}</div>
-                    </div>
-                    ${actionBtn}
-                </div>`;
+                html += `<div class="content-card" style="display:flex; justify-content:space-between; align-items:center;"><div><div style="font-weight:600;">${isComposed ? '📝' : '📄'} ${item.title}</div></div>${actionBtn}</div>`;
             });
             document.getElementById('materials-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>Empty references catalog.</p>";
         }
 
-        function getYouTubeEmbedUrl(urlStr) {
-            if(!urlStr) return "";
-            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            let match = urlStr.match(regExp);
-            if (match && match[2].length === 11) { return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0&showinfo=0&controls=1`; }
-            return urlStr;
-        }
-
-        async function fetchLectures() {
-            const snap = await getDocs(collection(db, "lectures"));
-            allLectures = []; let html = '';
-            snap.forEach(doc => {
-                let data = doc.data(); allLectures.push({ id: doc.id, ...data });
-                let secureEmbed = getYouTubeEmbedUrl(data.link);
-                html += `
-                <div class="content-card">
-                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
-                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
-                    <div class="comment-box">
-                        <input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic...">
-                        <button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No streaming links cataloged.</p>";
-        }
-
-        document.getElementById('search-lectures').addEventListener('input', (e) => {
-            let key = e.target.value.toLowerCase(); let matches = allLectures.filter(l => l.title.toLowerCase().includes(key)); let html = '';
-            matches.forEach(data => {
-                let secureEmbed = getYouTubeEmbedUrl(data.link);
-                html += `<div class="content-card"><div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div><h4 style="margin:5px 0;">${data.title}</h4></div>`;
-            }); document.getElementById('lectures-container').innerHTML = html;
-        });
-
-        // QUERIES SYSTEM
-        window.postCommentNode = async function(lecId, lecTitle) {
-            let val = document.getElementById(`cmt-${lecId}`).value; if(!val) return;
-            showToast("Publishing comment record...");
-            await addDoc(collection(db, "comments"), {
-                lectureId: lecId, lectureTitle: lecTitle, studentEmail: currentUser.email,
-                studentName: currentUserData.name, text: val, date: new Date().toISOString(), adminReply: ""
-            });
-            document.getElementById(`cmt-${lecId}`).value = ''; fetchStudentQueries();
-        }
-
-        async function fetchStudentQueries() {
-            const snap = await getDocs(collection(db, "comments")); let html = '';
-            snap.forEach(doc => {
-                let c = doc.data();
-                if(c.studentEmail === currentUser.email) {
-                    html += `
-                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green);">
-                        <div style="font-size:0.75rem; color:gray; margin-bottom:5px;">Topic: ${c.lectureTitle}</div>
-                        <div style="font-size:0.9rem; font-weight:600; margin: 4px 0; color:var(--text-dark);">Q: ${c.text}</div>
-                        <div style="font-size:0.85rem; color: ${c.adminReply ? 'var(--dark-green)' : '#e53e3e'}; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0;">
-                            <b>Admin Reply:</b> ${c.adminReply ? c.adminReply : '<i>Pending response...</i>'}
-                        </div>
-                    </div>`;
-                }
-            });
-            document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No questions tracked inside account.</p>";
-        }
-
-        // Profile Update
-        document.getElementById('btn-edit-profile-trigger').addEventListener('click', () => {
-            document.getElementById('edit-profile-form').classList.remove('hidden'); document.getElementById('btn-edit-profile-trigger').classList.add('hidden');
-            document.getElementById('edit-prof-name').value = currentUserData.name || ''; document.getElementById('edit-prof-phone').value = currentUserData.phone || ''; document.getElementById('edit-prof-college').value = currentUserData.college || '';
-        });
-        document.getElementById('btn-cancel-edit').addEventListener('click', () => {
-            document.getElementById('edit-profile-form').classList.add('hidden'); document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
-        });
-        document.getElementById('btn-update-profile').addEventListener('click', async () => {
-            const n = document.getElementById('edit-prof-name').value; const p = document.getElementById('edit-prof-phone').value; const c = document.getElementById('edit-prof-college').value;
-            if(!n || !p || !c) return showToast("Empty values.", "error"); showToast("Updating identity nodes...", "success");
-            try {
-                await updateDoc(doc(db, "users", currentUser.uid), { name: n, phone: p, college: c });
-                currentUserData.name = n; currentUserData.phone = p; currentUserData.college = c; updateProfileUI(currentUserData, currentUser.email);
-                document.getElementById('edit-profile-form').classList.add('hidden'); document.getElementById('btn-edit-profile-trigger').classList.remove('hidden');
-                showToast("Identity synchronized.");
-            } catch (error) { showToast("Identity registry write block error.", "error"); }
-        });
-
-        // ==========================================
-        // DYNAMIC ADMINISTRATIVE SUITE HANDLERS (FIRESTORE TOTAL CONTROL)
-        // ==========================================
-        
+        // ----------------------------------------------------
+        // ADMIN CONTROLS (BULK MCQs & NOTES)
+        // ----------------------------------------------------
         document.getElementById('btn-add-bulk-mcq').addEventListener('click', async (e) => {
             let btn = e.target; let topic = document.getElementById('admin-bulk-topic').value; let textData = document.getElementById('admin-bulk-text').value;
-            if(!topic || !textData) return showToast("All configuration strings needed.", "error");
-            btn.disabled = true; showToast("Executing air-tight parser pipeline...", "success");
+            if(!topic || !textData) return showToast("All parameters required.", "error");
+            
+            btn.disabled = true; showToast("Running bulk parser...", "success");
+            
             try {
                 let parsedQs = []; let blocks = textData.split(/Question:/i);
                 blocks.forEach(block => {
@@ -928,76 +810,123 @@
 
                 if(parsedQs.length === 0) { btn.disabled = false; return showToast("Format broke. Must follow exact structure.", "error"); }
 
-                let docRef = doc(db, "manual_tests", topic.trim()); let checkDoc = await getDoc(docRef);
-                let baseQs = checkDoc.exists() ? checkDoc.data().questions : [];
+                let docRef = doc(db, "manual_tests", topic.trim()); let existingDoc = await getDoc(docRef);
+                let currentQs = existingDoc.exists() ? existingDoc.data().questions : [];
                 
-                await setDoc(docRef, { topic: topic.trim(), questions: [...baseQs, ...parsedQs], updatedAt: new Date().toISOString() });
-                showToast(`Pushed ${parsedQs.length} permanent MCQ items!`, "success");
+                await setDoc(docRef, { topic: topic.trim(), questions: [...currentQs, ...parsedQs] });
+                showToast(`Pushed ${parsedQs.length} MCQs!`, "success");
                 document.getElementById('admin-bulk-text').value = ''; fetchManualMCQs(); fetchAdminManageContent();
-            } catch(err) { showToast("Cloud nodes write aborted.", "error"); }
-            btn.disabled = false;
-        });
-        
-        document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
-            let btn = e.target; let t = document.getElementById('admin-note-title').value; let c = document.getElementById('admin-note-content').value;
-            if(!t || !c) return showToast("All inputs required.", "error");
-            btn.disabled = true; showToast("Uploading node package...");
-            try {
-                await addDoc(collection(db, "materials"), { title: t, content: c, type: 'composed', timestamp: new Date().toISOString() });
-                showToast("Smart note active on student end panels.", "success");
-                document.getElementById('admin-note-title').value = ''; document.getElementById('admin-note-content').value = '';
-                fetchMaterials(); fetchAdminManageContent();
-            } catch(err) { showToast("Write error encountered.", "error"); }
+            } catch(error) { showToast("Error setting database blocks.", "error"); }
             btn.disabled = false;
         });
 
+        document.getElementById('btn-compose-note').addEventListener('click', async (e) => {
+            let btn = e.target; let t = document.getElementById('admin-note-title').value; let c = document.getElementById('admin-note-content').value;
+            if(!t || !c) return showToast("Missing content.", "error");
+            btn.disabled = true; showToast("Publishing Note...");
+            try {
+                await addDoc(collection(db, "materials"), { title: t, content: c, type: 'composed', timestamp: new Date().toISOString() });
+                showToast("Note published.", "success");
+                document.getElementById('admin-note-title').value = ''; document.getElementById('admin-note-content').value = '';
+                fetchMaterials(); fetchAdminManageContent();
+            } catch(err) { } btn.disabled = false;
+        });
+
         document.getElementById('btn-save-gemini').addEventListener('click', async () => {
-            let key = document.getElementById('admin-gemini-input').value; if(!key) return showToast("Blank field.", "error");
-            showToast("Deploying cloud configuration keys...");
+            let key = document.getElementById('admin-gemini-input').value; if(!key) return;
             try {
                 await setDoc(doc(db, "settings", "config"), { geminiKey: key.trim(), updatedAt: new Date().toISOString() });
-                GEMINI_API_KEY = key.trim(); showToast("Token active across all nodes globally.", "success");
-            } catch(e) { showToast("Cloud block rules intercept.", "error"); }
+                GEMINI_API_KEY = key.trim(); showToast("Token active globally.", "success");
+            } catch(e) { }
+        });
+
+        document.getElementById('btn-add-lecture').addEventListener('click', async (e) => {
+            let btn = e.target; let t = document.getElementById('admin-lec-title').value; let l = document.getElementById('admin-lec-link').value; if(!t || !l) return;
+            btn.disabled = true; await addDoc(collection(db, "lectures"), { title: t, link: l, date: new Date().toISOString() });
+            document.getElementById('admin-lec-title').value = ''; document.getElementById('admin-lec-link').value = ''; fetchLectures(); fetchAdminManageContent(); btn.disabled = false;
+        });
+
+        document.getElementById('btn-add-material').addEventListener('click', async (e) => {
+            let btn = e.target; let title = document.getElementById('admin-mat-title').value; let linkInput = document.getElementById('admin-mat-link').value; let fileElement = document.getElementById('admin-mat-file').files[0];
+            if(!title) return showToast("Title missing.", "error");
+            if(!fileElement && !linkInput) return showToast("Provide a file OR link.", "error");
+            
+            btn.disabled = true; showToast("Processing file upload...");
+            try {
+                let downloadUrl = "", fName = "";
+                if(fileElement) {
+                    let fileStorageRef = ref(storage, `materials/${Date.now()}_${fileElement.name}`);
+                    let snapshot = await uploadBytes(fileStorageRef, fileElement);
+                    downloadUrl = await getDownloadURL(snapshot.ref); fName = fileElement.name;
+                } else if(linkInput) { downloadUrl = linkInput; fName = "External Link"; }
+                
+                await addDoc(collection(db, "materials"), { title: title, fileUrl: downloadUrl, fileName: fName, type: 'file', timestamp: new Date().toISOString() });
+                showToast("Material asset synced live.");
+                document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-file').value = ''; document.getElementById('admin-mat-link').value = '';
+                fetchMaterials(); fetchAdminManageContent();
+            } catch (err) { showToast(`Upload aborted.`, "error"); }
+            btn.disabled = false;
         });
 
         async function fetchAdminManageContent() {
             const lecSnap = await getDocs(collection(db, "lectures")); let lHtml = '';
             lecSnap.forEach(d => { lHtml += `<div class="admin-manage-item"><span>▶️ ${d.data().title}</span><button class="btn-delete" onclick="deleteLectureNode('${d.id}')">🗑️</button></div>`; });
-            document.getElementById('admin-manage-lectures').innerHTML = lHtml || "<p style='font-size:0.8rem; color:gray;'>No components logged.</p>";
+            document.getElementById('admin-manage-lectures').innerHTML = lHtml || "<p style='font-size:0.8rem; color:gray;'>No lectures found.</p>";
 
             const matSnap = await getDocs(collection(db, "materials")); let mHtml = '';
             matSnap.forEach(d => { mHtml += `<div class="admin-manage-item"><span>📄 ${d.data().title}</span><button class="btn-delete" onclick="deleteMaterialNode('${d.id}')">🗑️</button></div>`; });
-            document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No file reference components logged.</p>";
+            document.getElementById('admin-manage-materials').innerHTML = mHtml || "<p style='font-size:0.8rem; color:gray;'>No materials found.</p>";
 
             const mcqSnap = await getDocs(collection(db, "manual_tests")); let qHtml = '';
             mcqSnap.forEach(d => { qHtml += `<div class="admin-manage-item"><span>📚 Unit: ${d.data().topic} (${d.data().questions.length} Items)</span><button class="btn-delete" onclick="deleteTopicNode('${d.id}')">🗑️</button></div>`; });
-            document.getElementById('admin-manage-mcqs').innerHTML = qHtml || "<p style='font-size:0.8rem; color:gray;'>No units available.</p>";
+            document.getElementById('admin-manage-mcqs').innerHTML = qHtml || "<p style='font-size:0.8rem; color:gray;'>No manual tests found.</p>";
         }
 
-        window.deleteLectureNode = async function(id) { if(confirm("Confirm deletion process?")) { await deleteDoc(doc(db, "lectures", id)); fetchLectures(); fetchAdminManageContent(); } }
-        window.deleteMaterialNode = async function(id) { if(confirm("Confirm deletion process?")) { await deleteDoc(doc(db, "materials", id)); fetchMaterials(); fetchAdminManageContent(); } }
-        window.deleteTopicNode = async function(id) { if(confirm("Confirm deletion process?")) { await deleteDoc(doc(db, "manual_tests", id)); fetchManualMCQs(); fetchAdminManageContent(); } }
+        window.deleteLectureNode = async function(id) { if(confirm("Permanently delete this video lecture?")) { await deleteDoc(doc(db, "lectures", id)); fetchLectures(); fetchAdminManageContent(); } }
+        window.deleteMaterialNode = async function(id) { if(confirm("Permanently delete this material?")) { await deleteDoc(doc(db, "materials", id)); fetchMaterials(); fetchAdminManageContent(); } }
+        window.deleteTopicNode = async function(id) { if(confirm("Delete this entire MCQ Topic Test?")) { await deleteDoc(doc(db, "manual_tests", id)); fetchManualMCQs(); fetchAdminManageContent(); } }
         
-        document.getElementById('btn-add-lecture').addEventListener('click', async (e) => {
-            let btn = e.target; let t = document.getElementById('admin-lec-title').value; let l = document.getElementById('admin-lec-link').value;
-            if(!t || !l) return showToast("Inputs blank.", "error"); btn.disabled = true;
-            await addDoc(collection(db, "lectures"), { title: t, link: l, date: new Date().toISOString() });
-            document.getElementById('admin-lec-title').value = ''; document.getElementById('admin-lec-link').value = '';
-            fetchLectures(); fetchAdminManageContent(); btn.disabled = false;
+        async function fetchLectures() {
+            const snap = await getDocs(collection(db, "lectures")); allLectures = []; let html = '';
+            snap.forEach(doc => {
+                let data = doc.data(); allLectures.push({ id: doc.id, ...data }); let secureEmbed = getYouTubeEmbedUrl(data.link);
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div>
+                    <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
+                    <div class="comment-box"><input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic..."><button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button></div>
+                </div>`;
+            }); document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
+        }
+
+        document.getElementById('search-lectures').addEventListener('input', (e) => {
+            let key = e.target.value.toLowerCase(); let matches = allLectures.filter(l => l.title.toLowerCase().includes(key)); let html = '';
+            matches.forEach(data => { let secureEmbed = getYouTubeEmbedUrl(data.link); html += `<div class="content-card"><div class="video-container"><iframe src="${secureEmbed}" allowfullscreen></iframe></div><h4 style="margin:5px 0;">${data.title}</h4></div>`; });
+            document.getElementById('lectures-container').innerHTML = html;
         });
 
-        document.getElementById('btn-add-material').addEventListener('click', async (e) => {
-            let btn = e.target; let title = document.getElementById('admin-mat-title').value; let linkInput = document.getElementById('admin-mat-link').value;
-            if(!title || !linkInput) return showToast("Missing link Target.", "error");
-            btn.disabled = true; showToast("Uploading document link...");
-            try {
-                await addDoc(collection(db, "materials"), { title: title, fileUrl: linkInput, fileName: "External Uniform Resource Target", type: 'file', timestamp: new Date().toISOString() });
-                showToast("File instance ready.");
-                document.getElementById('admin-mat-title').value = ''; document.getElementById('admin-mat-link').value = '';
-                fetchMaterials(); fetchAdminManageContent();
-            } catch (err) { showToast("Check Firestore rule sets.", "error"); }
-            btn.disabled = false;
-        });
+        window.postCommentNode = async function(lecId, lecTitle) {
+            let val = document.getElementById(`cmt-${lecId}`).value; if(!val) return;
+            await addDoc(collection(db, "comments"), { lectureId: lecId, lectureTitle: lecTitle, studentEmail: currentUser.email, studentName: currentUserData.name, text: val, date: new Date().toISOString(), adminReply: "" });
+            document.getElementById(`cmt-${lecId}`).value = ''; fetchStudentQueries(); 
+        }
+
+        async function fetchStudentQueries() {
+            const snap = await getDocs(collection(db, "comments")); let html = '';
+            snap.forEach(doc => {
+                let c = doc.data();
+                if(c.studentEmail === currentUser.email) {
+                    html += `
+                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-green);">
+                        <div style="font-size:0.75rem; color:gray; margin-bottom:5px;">Topic: ${c.lectureTitle}</div>
+                        <div style="font-size:0.9rem; font-weight:600; margin: 4px 0; color:var(--text-dark);">Q: ${c.text}</div>
+                        <div style="font-size:0.85rem; color: ${c.adminReply ? 'var(--dark-green)' : '#e53e3e'}; margin-top:8px; padding-top:8px; border-top:1px dashed #e2e8f0;">
+                            <b>Admin Reply:</b> ${c.adminReply ? c.adminReply : '<i>Pending response...</i>'}
+                        </div>
+                    </div>`;
+                }
+            }); document.getElementById('student-queries-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>You haven't asked any questions yet.</p>";
+        }
 
         async function fetchAdminComments() {
             const snap = await getDocs(collection(db, "comments")); let html = '';
@@ -1005,17 +934,13 @@
                 let c = doc.data();
                 html += `
                 <div class="admin-comment-item">
-                    <div style="font-size:0.7rem; color:var(--primary-green); font-weight:bold;">Topic Target: ${c.lectureTitle}</div>
-                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">Student Record Name: ${c.studentName}</div>
-                    <div style="font-size:0.85rem; color:#4a5568; margin-bottom: 8px;">Question string: "${c.text}"</div>
+                    <div style="font-size:0.7rem; color:var(--primary-green); font-weight:bold;">Topic: ${c.lectureTitle}</div>
+                    <div style="font-weight:600; font-size:0.85rem; margin:2px 0;">Student: ${c.studentName}</div>
+                    <div style="font-size:0.85rem; color:#4a5568; margin-bottom: 8px;">Q: "${c.text}"</div>
                     ${c.adminReply ? `<div style="font-size:0.8rem; color:var(--dark-green);"><b>Replied:</b> ${c.adminReply}</div>` : 
-                    `<div class="comment-box" style="margin-top:5px; padding-top:5px; border-top:none;">
-                        <input type="text" id="admin-reply-${doc.id}" class="comment-input" placeholder="Type your reply here..." style="font-size:0.75rem; padding: 6px 10px;">
-                        <button class="btn-comment" onclick="submitAdminReply('${doc.id}')" style="font-size:0.75rem; padding:0 12px;">Reply</button>
-                    </div>`}
+                    `<div class="comment-box" style="margin-top:5px; padding-top:5px; border-top:none;"><input type="text" id="admin-reply-${doc.id}" class="comment-input" placeholder="Type your reply here..." style="font-size:0.75rem; padding: 6px 10px;"><button class="btn-comment" onclick="submitAdminReply('${doc.id}')" style="font-size:0.75rem; padding:0 12px;">Reply</button></div>`}
                 </div>`;
-            });
-            document.getElementById('admin-comments-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No student commentsLogged inside feeds.</p>";
+            }); document.getElementById('admin-comments-list').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>Empty queries dashboard.</p>";
         }
 
         window.submitAdminReply = async function(commentId) {
@@ -1038,7 +963,7 @@
                         <div class="user-list-img" style="background-image:url(${u.profilePic || 'https://via.placeholder.com/40'})"></div>
                         <div>
                             <div style="font-weight:bold; font-size:0.9rem; color:${u.isBlocked ? 'var(--danger)' : 'var(--text-dark)'};">${u.name} ${u.isBlocked ? '⚠️ [BLOCKED]' : ''}</div>
-                            <div style="font-size:0.72rem; color:gray;">${u.college} | Log Contact: ${u.email}</div>
+                            <div style="font-size:0.72rem; color:gray;">${u.college} | ID: ${u.email}</div>
                         </div>
                     </div>
                     <div style="display:flex; gap:8px; width:100%; margin-top:5px;">
@@ -1046,21 +971,18 @@
                         <a href="https://wa.me/${cleanPhone}" target="_blank" style="flex:1; background: var(--whatsapp); color: white; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; display: flex; justify-content: center; align-items: center;">💬 WhatsApp Chat</a>
                     </div>
                 </div>`;
-            });
-            document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No log records tracked.</p>";
+            }); document.getElementById('admin-users-list').innerHTML = html || "<p style='font-size:0.85rem; color:gray;'>No students.</p>";
         }
 
         document.getElementById('admin-search-users').addEventListener('input', (e) => {
-            let val = e.target.value.toLowerCase();
-            let matches = adminAllUsers.filter(u => (u.name && u.name.toLowerCase().includes(val)) || (u.college && u.college.toLowerCase().includes(val)) || (u.email && u.email.toLowerCase().includes(val)));
+            let val = e.target.value.toLowerCase(); let matches = adminAllUsers.filter(u => (u.name && u.name.toLowerCase().includes(val)) || (u.college && u.college.toLowerCase().includes(val)) || (u.email && u.email.toLowerCase().includes(val)));
             renderAdminUserDirectory(matches);
         });
 
         window.toggleBlockUser = async function(userId, currentBlockStatus) {
-            if(confirm("Confirm action context registry block rule parameter alteration?")) {
-                await updateDoc(doc(db, "users", userId), { isBlocked: !currentBlockStatus }); fetchAdminDirectory();
-            }
+            if(confirm(currentBlockStatus ? "Unblock this student?" : "Block this student?")) { await updateDoc(doc(db, "users", userId), { isBlocked: !currentBlockStatus }); fetchAdminDirectory(); }
         }
+
     </script>
 </body>
 </html>
