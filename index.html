@@ -1037,6 +1037,17 @@
             } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
         });
 
+        // YouTube Embed Parser
+        function getYouTubeEmbedUrl(urlStr) {
+            if(!urlStr) return "";
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = urlStr.match(regExp);
+            if (match && match[2].length === 11) { 
+                return `https://www.youtube.com/embed/${match[2]}?modestbranding=1&rel=0&showinfo=0&controls=1`; 
+            }
+            return urlStr;
+        }
+        
         async function fetchLectures() {
             const snap = await getDocs(collection(db, "lectures"));
             allLectures = []; let html = '';
