@@ -994,57 +994,99 @@
             }
         });
 
-        // ADMIN EDIT FUNCTIONALITY
-        window.openAdminEdit = async function(docId) {
-            showToast("Fetching document data...", "success");
+                // ==========================================
+        // 1. LECTURE EDIT FUNCTIONS
+        // ==========================================
+        window.openLectureEdit = async function(id) {
+            showToast("Fetching lecture...", "success");
             try {
-                const docRef = doc(db, "materials", docId);
-                const docSnap = await getDoc(docRef);
-                if(docSnap.exists()) {
-                    let data = docSnap.data();
-                    document.getElementById('edit-doc-id').value = docId;
-                    document.getElementById('edit-title').value = data.title || "";
-                    
-                    // Agar notes hain to content aayega, agar PDF hai to link aayega
-                    document.getElementById('edit-content').value = data.content ? data.content : (data.fileUrl || "");
-                    
-                    document.getElementById('admin-edit-modal').style.display = 'flex';
+                const snap = await getDoc(doc(db, "lectures", id));
+                if(snap.exists()) {
+                    let data = snap.data();
+                    document.getElementById('edit-lecture-id').value = id;
+                    document.getElementById('edit-lecture-title').value = data.title || "";
+                    document.getElementById('edit-lecture-url').value = data.link || ""; // Using 'link' based on your DB schema
+                    document.getElementById('lecture-edit-modal').style.display = 'flex';
                 }
-            } catch(e) {
-                showToast("Error loading edit data", "error");
-            }
+            } catch(e) { showToast("Error loading data", "error"); }
+        }
+        window.closeLectureEdit = function() { document.getElementById('lecture-edit-modal').style.display = 'none'; }
+        window.saveLectureEdit = async function() {
+            const id = document.getElementById('edit-lecture-id').value;
+            const title = document.getElementById('edit-lecture-title').value.trim();
+            const url = document.getElementById('edit-lecture-url').value.trim();
+            if(!title) return showToast("Title required", "error");
+            try {
+                await updateDoc(doc(db, "lectures", id), { title: title, link: url });
+                showToast("Lecture updated!", "success");
+                closeLectureEdit();
+                fetchAdminManageContent(); fetchLectures();
+            } catch(e) { showToast("Update failed", "error"); }
         }
 
-        window.closeAdminEdit = function() {
-            document.getElementById('admin-edit-modal').style.display = 'none';
+        // ==========================================
+        // 2. MATERIAL EDIT FUNCTIONS
+        // ==========================================
+        window.openMaterialEdit = async function(id) {
+            showToast("Fetching material...", "success");
+            try {
+                const snap = await getDoc(doc(db, "materials", id));
+                if(snap.exists()) {
+                    let data = snap.data();
+                    document.getElementById('edit-material-id').value = id;
+                    document.getElementById('edit-material-title').value = data.title || "";
+                    document.getElementById('edit-material-content').value = data.content ? data.content : (data.fileUrl || "");
+                    document.getElementById('material-edit-modal').style.display = 'flex';
+                }
+            } catch(e) { showToast("Error loading data", "error"); }
         }
-
-        window.saveAdminEdit = async function() {
-            const id = document.getElementById('edit-doc-id').value;
-            const updatedTitle = document.getElementById('edit-title').value.trim();
-            const updatedContent = document.getElementById('edit-content').value.trim();
+        window.closeMaterialEdit = function() { document.getElementById('material-edit-modal').style.display = 'none'; }
+        window.saveMaterialEdit = async function() {
+            const id = document.getElementById('edit-material-id').value;
+            const title = document.getElementById('edit-material-title').value.trim();
+            const content = document.getElementById('edit-material-content').value.trim();
+            if(!title || !content) return showToast("Fields required", "error");
             
-            if(!updatedTitle || !updatedContent) return showToast("Fields cannot be empty", "error");
-            
-            showToast("Updating database...", "success");
-            
-            // Check karega ke content link (http) hai ya normal text
-            let updateData = { title: updatedTitle };
-            if(updatedContent.startsWith('http')) {
-                updateData.fileUrl = updatedContent;
-            } else {
-                updateData.content = updatedContent;
-            }
+            let updateData = { title: title };
+            if(content.startsWith('http')) updateData.fileUrl = content;
+            else updateData.content = content;
 
             try {
                 await updateDoc(doc(db, "materials", id), updateData);
-                showToast("Material updated successfully!", "success");
-                closeAdminEdit();
-                if(typeof fetchMaterials === 'function') fetchMaterials(); // Lists ko refresh karne ke liye
-            } catch(e) {
-                showToast("Update failed: " + e.message, "error");
-            }
-            }
+                showToast("Material updated!", "success");
+                closeMaterialEdit();
+                fetchAdminManageContent(); fetchMaterials();
+            } catch(e) { showToast("Update failed", "error"); }
+        }
+
+        // ==========================================
+        // 3. TEST EDIT FUNCTIONS
+        // ==========================================
+        window.openTestEdit = async function(id) {
+            showToast("Fetching test...", "success");
+            try {
+                const snap = await getDoc(doc(db, "manual_tests", id));
+                if(snap.exists()) {
+                    let data = snap.data();
+                    document.getElementById('edit-test-id').value = id;
+                    document.getElementById('edit-test-title').value = data.topic || ""; // Using 'topic' based on your DB schema
+                    document.getElementById('test-edit-modal').style.display = 'flex';
+                }
+            } catch(e) { showToast("Error loading data", "error"); }
+        }
+        window.closeTestEdit = function() { document.getElementById('test-edit-modal').style.display = 'none'; }
+        window.saveTestEdit = async function() {
+            const id = document.getElementById('edit-test-id').value;
+            const title = document.getElementById('edit-test-title').value.trim();
+            if(!title) return showToast("Title required", "error");
+            try {
+                await updateDoc(doc(db, "manual_tests", id), { topic: title });
+                showToast("Test updated!", "success");
+                closeTestEdit();
+                fetchAdminManageContent(); fetchManualMCQs();
+            } catch(e) { showToast("Update failed", "error"); }
+        }
+
                                     
 
         // ------------------------------------------------------------------
