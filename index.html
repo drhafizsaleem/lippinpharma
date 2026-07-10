@@ -436,14 +436,25 @@
         let currentTestTopic = "";
         let myTestHistory = [];
 
-        // TOAST ENGINE
+                // TOAST ENGINE (Fixed Auto-Hide)
+        let toastTimer;
         window.showToast = function(message, type = 'success') {
             const box = document.getElementById('notification-box');
             document.getElementById('noti-msg').innerText = message;
+            
+            // Naya notification aane par show class lagayen
             box.className = type === 'success' ? 'noti-success show' : 'noti-error show';
             document.getElementById('noti-icon').innerText = type === 'success' ? '✅' : '⚠️';
-            setTimeout(() => { box.classList.remove('show'); }, 4000);
+            
+            // Purana timer clear karein taake naya theek se kaam kare
+            clearTimeout(toastTimer);
+            
+            // 3.5 seconds ke baad notification ko automatically gayab kar dein
+            toastTimer = setTimeout(() => { 
+                box.classList.remove('show'); 
+            }, 3500); 
         }
+
 
         // NAVIGATION TABS
         window.switchTab = function(tabId, element = null) {
