@@ -1125,6 +1125,83 @@
             } catch(e) { showToast("Error loading test data", "error"); }
         }
         
+        // ==========================================
+        // 3. TEST EDIT FUNCTIONS (PROFESSIONAL UI WITH DELETE & AUTO-NUMBERING)
+        // ==========================================
+        window.openTestEdit = async function(id) {
+            showToast("Fetching test data...", "success");
+            try {
+                const snap = await getDoc(doc(db, "manual_tests", id));
+                if(snap.exists()) {
+                    let data = snap.data();
+                    document.getElementById('edit-test-id').value = id;
+                    document.getElementById('edit-test-title').value = data.topic || "";
+                    
+                    let mcqContainer = document.getElementById('mcq-edit-container');
+                    let html = '';
+                    
+                    if(data.questions && data.questions.length > 0) {
+                        data.questions.forEach((q, i) => {
+                            let optA = q.options[0] || '';
+                            let optB = q.options[1] || '';
+                            let optC = q.options[2] || '';
+                            let optD = q.options[3] || '';
+                            let reason = q.reason || '';
+                            
+                            html += `
+                            <div class="mcq-edit-block" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cbd5e0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                
+                                <!-- Top Bar with Auto-Numbering and Delete Button -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label class="mcq-number-label" style="font-weight:bold; font-size: 1.1rem; color:var(--primary-green);">Q${i+1}:</label>
+                                    <button onclick="removeSingleMCQ(this)" style="background:var(--danger); color:white; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem; font-weight:bold;">🗑️ Delete</button>
+                                </div>
+                                
+                                <input type="text" class="mcq-q-text input-field" value="${q.question}" style="width:100%; margin-bottom:10px; box-sizing: border-box;">
+                                
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                    <div><span style="font-size:0.75rem; color:gray;">Option A:</span><input type="text" class="mcq-opt-0 input-field" value="${optA}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                    <div><span style="font-size:0.75rem; color:gray;">Option B:</span><input type="text" class="mcq-opt-1 input-field" value="${optB}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                    <div><span style="font-size:0.75rem; color:gray;">Option C:</span><input type="text" class="mcq-opt-2 input-field" value="${optC}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                    <div><span style="font-size:0.75rem; color:gray;">Option D:</span><input type="text" class="mcq-opt-3 input-field" value="${optD}" style="width:100%; margin-bottom:0; box-sizing: border-box;"></div>
+                                </div>
+                                
+                                <div style="display:flex; gap: 10px; align-items: center; background:#f8fafc; padding:10px; border-radius:6px;">
+                                    <label style="font-weight:bold; font-size:0.85rem; margin:0;">Correct Answer:</label>
+                                    <select class="mcq-correct-idx input-field" style="width: 80px; margin-bottom:0; padding:8px;">
+                                        <option value="0" ${q.correctIndex === 0 ? 'selected' : ''}>A</option>
+                                        <option value="1" ${q.correctIndex === 1 ? 'selected' : ''}>B</option>
+                                        <option value="2" ${q.correctIndex === 2 ? 'selected' : ''}>C</option>
+                                        <option value="3" ${q.correctIndex === 3 ? 'selected' : ''}>D</option>
+                                    </select>
+                                    <input type="text" class="mcq-reason input-field" value="${reason}" placeholder="Explanation (Optional)" style="flex:1; margin-bottom:0; box-sizing: border-box;">
+                                </div>
+                            </div>`;
+                        });
+                    } else {
+                        html = "<p style='text-align:center; color:gray; font-size:0.9rem;'>No questions found in this test.</p>";
+                    }
+                    
+                    mcqContainer.innerHTML = html;
+                    document.getElementById('test-edit-modal').style.display = 'flex';
+                }
+            } catch(e) { showToast("Error loading test data", "error"); }
+        }
+        
+        // --- NAYA FUNCTION: SINGLE MCQ DELETE AUR AUTO-NUMBERING K LIYE ---
+        window.removeSingleMCQ = function(btnElement) {
+            if(confirm("Are you sure you want to remove this specific question?")) {
+                // Sawaal ka poora block screen se delete kar dena
+                btnElement.closest('.mcq-edit-block').remove();
+                
+                // Saare bache hue blocks pakarna aur unko naye siray se Numbering dena (Q1, Q2, Q3...)
+                let allBlocks = document.querySelectorAll('.mcq-edit-block');
+                allBlocks.forEach((block, index) => {
+                    block.querySelector('.mcq-number-label').innerText = `Q${index + 1}:`;
+                });
+            }
+        }
+        
         window.closeTestEdit = function() { document.getElementById('test-edit-modal').style.display = 'none'; }
         
         window.saveTestEdit = async function() {
@@ -1135,7 +1212,7 @@
             showToast("Parsing and saving MCQs...", "success");
             let parsedQuestions = [];
             
-            // Saare generate kiye gaye MCQ blocks ka data read karna
+            // Screen par mojood current blocks ka data uthana (Delete hue blocks skip ho jayenge)
             let blocks = document.querySelectorAll('.mcq-edit-block');
             blocks.forEach((block) => {
                 let questionText = block.querySelector('.mcq-q-text').value.trim();
@@ -1167,6 +1244,7 @@
                 fetchAdminManageContent(); fetchManualMCQs();
             } catch(e) { showToast("Update failed", "error"); }
         }
+
                                     
 
         // ------------------------------------------------------------------
