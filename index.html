@@ -886,33 +886,44 @@
             } catch (error) { showToast(`Update failed: ${error.message}`, "error"); }
         });
 
-        async function fetchLectures() {
-            const snap = await getDocs(collection(db, "lectures"));
+                async function fetchLectures() {
+            const snap = await getDocs(collection(db, "lectures")); 
+            allLectures = []; 
             let html = '';
             snap.forEach(doc => {
-                let data = doc.data();
+                let data = doc.data(); 
+                allLectures.push({ id: doc.id, ...data }); 
                 let secureEmbed = getYouTubeEmbedUrl(data.link);
                 html += `
                 <div class="content-card">
-                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen style="pointer-events: auto;"></iframe></div>
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen style="z-index: 10; pointer-events: auto;"></iframe></div>
                     <h4 style="margin:5px 0; font-size:1.05rem;">${data.title}</h4>
+                    <div class="comment-box">
+                        <input type="text" id="cmt-${doc.id}" class="comment-input" placeholder="Ask a question about this topic...">
+                        <button class="btn-comment" onclick="postCommentNode('${doc.id}', '${data.title}')">Post</button>
+                    </div>
                 </div>`;
-            });
+            }); 
             document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.9rem; color:gray;'>No video files live.</p>";
         }
 
-        document.getElementById('search-lectures').addEventListener('input', async (e) => {
-            const snap = await getDocs(collection(db, "lectures"));
-            let key = e.target.value.toLowerCase();
+        document.getElementById('search-lectures').addEventListener('input', (e) => {
+            let key = e.target.value.toLowerCase(); 
+            let matches = allLectures.filter(l => l.title.toLowerCase().includes(key)); 
             let html = '';
-            snap.forEach(doc => {
-                let data = doc.data();
-                if(data.title.toLowerCase().includes(key)) {
-                    let secureEmbed = getYouTubeEmbedUrl(data.link);
-                    html += `<div class="content-card"><div class="video-container"><iframe src="${secureEmbed}" allowfullscreen style="pointer-events: auto;"></iframe></div><h4 style="margin:5px 0;">${data.title}</h4></div>`;
-                }
+            matches.forEach(data => { 
+                let secureEmbed = getYouTubeEmbedUrl(data.link); 
+                html += `
+                <div class="content-card">
+                    <div class="video-container"><iframe src="${secureEmbed}" allowfullscreen style="pointer-events: auto;"></iframe></div>
+                    <h4 style="margin:5px 0;">${data.title}</h4>
+                    <div class="comment-box">
+                        <input type="text" id="cmt-${data.id}" class="comment-input" placeholder="Ask a question about this topic...">
+                        <button class="btn-comment" onclick="postCommentNode('${data.id}', '${data.title}')">Post</button>
+                    </div>
+                </div>`; 
             });
-            document.getElementById('lectures-container').innerHTML = html;
+            document.getElementById('lectures-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No matching lectures found.</p>";
         });
 
         // ----------------------------------------------------
