@@ -1559,7 +1559,12 @@
                 let docRef = doc(db, "manual_tests", topic.trim()); let existingDoc = await getDoc(docRef);
                 let currentQs = existingDoc.exists() ? existingDoc.data().questions : [];
                 
-                await setDoc(docRef, { topic: topic.trim(), questions: [...currentQs, ...parsedQs], updatedAt: new Date().toISOString() });
+                        // Pura function dhoond kar is tarah save karna hai (Sirf chapter wali line add ki hai):
+        let chapterVal = document.getElementById('admin-bulk-chapter').value.trim() || 'General Tests';
+        // ... (purani parsing logic wesi rahegi) ...
+        // Save karte waqt ye change karein:
+        await setDoc(docRef, { topic: topic.trim(), chapter: chapterVal, questions: [...currentQs, ...parsedQs], updatedAt: new Date().toISOString() });
+
                 showToast(`Pushed ${parsedQs.length} MCQs!`, "success");
                 document.getElementById('admin-bulk-text').value = ''; fetchManualMCQs(); fetchAdminManageContent(); fetchRecentActivityFeed();
             } catch(error) { showToast("Error setting database blocks.", "error"); }
