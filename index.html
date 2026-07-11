@@ -1300,7 +1300,7 @@
             renderTestsUI(manualMCQsData);
         }
 
-        function renderTestsUI(dataArray) {
+                function renderTestsUI(dataArray) {
             let groups = {};
             dataArray.forEach(d => {
                 let chap = d.chapter || "General Tests";
@@ -1310,14 +1310,18 @@
 
             let html = '';
             for(let chap in groups) {
-                html += `<div class="chapter-header" onclick="this.nextElementSibling.classList.toggle('active')" style="background: var(--blue);">📖 ${chap} <span style="font-size:0.8rem;">▼</span></div><div class="chapter-content" style="border-left-color: var(--blue); display: flex; flex-wrap: wrap;">`;
+                html += `<div class="chapter-header" onclick="this.nextElementSibling.classList.toggle('active')" style="background: var(--blue);">📖 ${chap} <span style="font-size:0.8rem;">▼</span></div>
+                <div class="chapter-content" style="border-left-color: var(--blue);">
+                    <div style="display: flex; flex-wrap: wrap; gap: 5px;">`;
                 groups[chap].forEach(d => {
                     html += `<button class="topic-btn" onclick="startTestMode('${d.id}', '${d.topic}', false)">${d.topic} (${d.questions ? d.questions.length : 0} Qs)</button>`;
                 });
-                html += `</div>`;
+                html += `   </div>
+                </div>`;
             }
             document.getElementById('manual-topics-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No unit tests uploaded.</p>";
         }
+
 
         document.getElementById('search-tests')?.addEventListener('input', (e) => {
             let key = e.target.value.toLowerCase(); 
