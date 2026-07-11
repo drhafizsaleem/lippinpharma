@@ -1288,18 +1288,7 @@
 
                                     
 
-        // ------------------------------------------------------------------
-        // EVALUATION TEST SYSTEM (MANUAL & AI) WITH SUBMIT BUTTON & HISTORY
-        // ------------------------------------------------------------------
-        async function fetchManualMCQs() {
-            const snap = await getDocs(collection(db, "manual_tests"));
-            manualMCQsData = []; let html = '';
-            snap.forEach(doc => { 
-                let d = doc.data(); manualMCQsData.push({ id: doc.id, ...d }); 
-                html += `<button class="topic-btn" onclick="startTestMode('${doc.id}', '${d.topic}', false)">${d.topic}</button>`;
-            });
-            document.getElementById('manual-topics-container').innerHTML = html || "<p style='font-size:0.8rem; color:gray;'>No unit tests uploaded.</p>";
-        }
+        async function fetchManualMCQs()
 
         window.startTestMode = function(identifier, topicName, isAI = false) {
             currentTestQuestions = [];
