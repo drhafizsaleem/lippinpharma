@@ -342,8 +342,10 @@
                 <div class="content-card" style="border: 1px solid var(--primary-green);">
                     <h3 style="margin-top:0; font-size:1rem; color:var(--primary-green);">📝 Bulk Upload Questions</h3>
                     <p style="font-size:0.8rem; margin: -5px 0 10px 0;">Format Example:<br>Question: What is X?<br>A: Option 1<br>B: Option 2<br>C: Option 3<br>D: Option 4<br>Answer: B<br>Reason: Explain here...</p>
-                    <input type="text" id="admin-bulk-chapter" placeholder="Chapter Name (e.g., General Pharma)">
-<input type="text" id="admin-bulk-topic" placeholder="Topic Title (e.g. Autonomic Nervous System)">
+                    <input type="text" id="admin-bulk-chapter" class="input-field" placeholder="Chapter Name (e.g., General Pharma)">
+<input type="text" id="admin-bulk-topic" class="input-field" placeholder="Topic Title (e.g. Autonomic Nervous System)">
+<input type="text" id="admin-bulk-testno" class="input-field" placeholder="Test No. (e.g., 1, 2, or Final)">
+
 
                     <textarea id="admin-bulk-text" rows="6" placeholder="Paste questions block here..."></textarea>
                     <button class="btn btn-primary" id="btn-add-bulk-mcq">Commit Bulk Save Node</button>
